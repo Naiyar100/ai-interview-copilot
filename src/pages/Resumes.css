@@ -1,0 +1,78 @@
+.resume-page {
+  min-height: 100vh;
+  padding: 60px 24px;
+  color: #f8f7ff;
+  background: #15182a;
+}
+
+.resume-shell {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+}
+
+.resume-topbar { margin-bottom: 28px; }
+.resume-topbar a { color: #aeb4cb; font-weight: 700; text-decoration: none; }
+.resume-topbar a:hover { color: white; }
+.resume-eyebrow { color: #a995ff; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.resume-shell > h1 { margin: 10px 0 12px; font-family: "Manrope", sans-serif; font-size: clamp(34px, 5vw, 48px); letter-spacing: -1.6px; }
+.resume-description { max-width: 700px; margin: 0 0 28px; color: #9da4bc; line-height: 1.7; }
+
+.resume-upload {
+  min-height: 150px;
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px dashed rgba(151, 126, 255, 0.55);
+  border-radius: 18px;
+  color: #c9cce0;
+  background: rgba(112, 79, 229, 0.08);
+  cursor: pointer;
+  text-align: center;
+}
+
+.resume-upload:hover { border-color: #a995ff; background: rgba(112, 79, 229, 0.13); }
+.resume-upload.uploading { cursor: wait; }
+.resume-upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.resume-upload strong { color: white; font-size: 17px; }
+.resume-upload span { font-size: 13px; }
+.resume-progress { width: min(420px, 100%); height: 8px; margin-top: 12px; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, 0.1); }
+.resume-progress span { height: 100%; display: block; border-radius: inherit; background: linear-gradient(90deg, #704fe5, #5487ed); transition: width 0.2s ease; }
+
+.resume-error, .resume-success { margin: 18px 0 0; font-size: 14px; font-weight: 700; }
+.resume-error { color: #ff8b8b; }
+.resume-success { color: #7ed5a9; }
+.resume-empty { margin-top: 24px; padding: 34px; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; color: #9da4bc; text-align: center; background: rgba(255, 255, 255, 0.03); }
+.resume-empty h2 { margin: 0 0 8px; color: white; }
+
+.resume-list { margin-top: 24px; display: grid; gap: 16px; }
+.resume-card { padding: 22px; border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 18px; background: rgba(255, 255, 255, 0.035); }
+.resume-card.active { border-color: rgba(132, 107, 236, 0.6); box-shadow: 0 14px 35px rgba(91, 74, 218, 0.12); }
+.resume-card-heading { display: flex; justify-content: space-between; gap: 20px; }
+.resume-card-heading span { color: #a995ff; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.resume-card-heading h2 { margin: 6px 0; color: white; font-size: 20px; word-break: break-word; }
+.resume-card-heading p { margin: 0; color: #8f96ad; font-size: 13px; }
+.resume-ready { height: fit-content; padding: 7px 10px; border-radius: 99px; color: #7ed5a9 !important; background: rgba(126, 213, 169, 0.1); }
+.resume-analysis { margin-top: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.resume-analysis div { padding: 13px; border-radius: 12px; background: rgba(8, 10, 22, 0.24); }
+.resume-analysis strong { color: #c9cce0; font-size: 12px; }
+.resume-analysis p { margin: 5px 0 0; color: white; font-size: 13px; line-height: 1.5; }
+.resume-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 10px; }
+.resume-actions button { min-height: 42px; padding: 0 16px; border: 0; border-radius: 11px; color: white; background: linear-gradient(135deg, #704fe5, #5487ed); font-weight: 700; cursor: pointer; }
+.resume-actions button.delete { border: 1px solid rgba(255, 139, 139, 0.28); color: #ffaaaa; background: rgba(255, 100, 100, 0.07); }
+.resume-actions button:disabled { cursor: not-allowed; opacity: 0.6; }
+
+@media (max-width: 640px) {
+  .resume-page { padding: 30px 16px; }
+  .resume-shell { padding: 22px; }
+  .resume-analysis { grid-template-columns: 1fr; }
+  .resume-card-heading { flex-direction: column; }
+  .resume-actions { align-items: stretch; flex-direction: column; }
+}

@@ -1,0 +1,126 @@
+.faq {
+  width: min(900px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 110px 0 125px;
+}
+
+.faq-heading {
+  max-width: 650px;
+  margin: 0 auto 50px;
+  text-align: center;
+}
+
+.faq-label {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: #6547dc;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.faq-heading h2 {
+  margin: 0;
+  color: #171e33;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(36px, 4vw, 50px);
+  line-height: 1.15;
+  letter-spacing: -2px;
+}
+
+.faq-heading p {
+  margin: 18px 0 0;
+  color: #687085;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.faq-list {
+  display: grid;
+  gap: 14px;
+}
+
+.faq-item {
+  overflow: hidden;
+  border: 1px solid rgba(109, 75, 226, 0.11);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12px 35px rgba(49, 44, 100, 0.06);
+  backdrop-filter: blur(16px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-item.open {
+  border-color: rgba(109, 75, 226, 0.28);
+  box-shadow: 0 18px 40px rgba(49, 44, 100, 0.1);
+}
+
+.faq-item h3 {
+  margin: 0;
+}
+
+.faq-question {
+  width: 100%;
+  padding: 23px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  border: 0;
+  color: #20283e;
+  background: transparent;
+  font-family: "Manrope", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-question:focus-visible {
+  outline: 3px solid rgba(109, 75, 226, 0.35);
+  outline-offset: -3px;
+}
+
+.faq-toggle {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #6547dc;
+  background: #f0edff;
+  font: 500 22px/1 "DM Sans", sans-serif;
+}
+
+.faq-answer {
+  padding: 0 74px 24px 25px;
+}
+
+.faq-answer p {
+  margin: 0;
+  color: #687085;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+@media (max-width: 600px) {
+  .faq {
+    width: min(100% - 32px, 900px);
+    padding: 80px 0 95px;
+  }
+
+  .faq-heading h2 {
+    letter-spacing: -1.3px;
+  }
+
+  .faq-question {
+    padding: 20px;
+    font-size: 16px;
+  }
+
+  .faq-answer {
+    padding: 0 20px 21px;
+  }
+}

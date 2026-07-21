@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+}
+
+html[data-theme="dark"] { color-scheme: dark; }
+
+:root {
+    --app-bg: #f4f6fb;
+    --app-text: #182033;
+    --app-muted: #687188;
+}
+
+html[data-theme="dark"] {
+    --app-bg: #111425;
+    --app-text: #f7f8ff;
+    --app-muted: #9ba4bb;
+}
+
+body {
+    min-width: 320px;
+    font-family: "DM Sans", sans-serif;
+    color: var(--app-text);
+    background-color: var(--app-bg);
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+button, input, select, textarea { font: inherit; }
+:focus-visible { outline: 3px solid #7c63ee; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

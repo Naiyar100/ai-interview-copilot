@@ -1,0 +1,9 @@
+process.env.NODE_ENV = "test";
+process.env.MONGODB_URI = "mongodb://127.0.0.1:27017/ai_interview_copilot_test";
+process.env.JWT_SECRET = "test-only-secret-that-is-never-used-in-production";
+process.env.JWT_EXPIRES_IN = "1h";
+process.env.CLIENT_URL = "http://localhost:5173";
+process.env.GEMINI_API_KEY = "test-gemini-key";
+process.env.GEMINI_MODEL = "test-model";
+process.env.GEMINI_FALLBACK_MODEL = "test-model-fallback";
+process.env.MAX_RESUME_SIZE_MB = "1";

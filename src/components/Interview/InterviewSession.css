@@ -1,0 +1,391 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap");
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: "DM Sans", sans-serif;
+}
+
+.session-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  color: #f8f7ff;
+  background: #15182a;
+}
+
+.session-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(35px);
+  pointer-events: none;
+}
+
+.session-glow-one {
+  width: 460px;
+  height: 460px;
+  top: -270px;
+  right: -100px;
+  background: rgba(112, 79, 229, 0.18);
+}
+
+.session-glow-two {
+  width: 360px;
+  height: 360px;
+  bottom: -220px;
+  left: -130px;
+  background: rgba(72, 137, 232, 0.11);
+}
+
+.session-container {
+  width: min(1050px, calc(100% - 48px));
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.session-header {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.session-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.session-logo {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: white;
+  background: linear-gradient(135deg, #7557ee, #4a8cf7);
+  box-shadow: 0 8px 20px rgba(104, 78, 226, 0.25);
+  font-size: 11px;
+}
+
+.session-status {
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #7ed5a9;
+  background: rgba(53, 183, 136, 0.11);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.session-status span {
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #35b788;
+}
+
+.session-content { padding: 60px 0 90px; }
+
+.session-overview {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 35px;
+}
+
+.session-eyebrow {
+  color: #a995ff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.session-overview h1 {
+  margin: 9px 0 0;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(30px, 4vw, 42px);
+  letter-spacing: -1.7px;
+}
+
+.session-config {
+  margin: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.session-config div {
+  min-width: 100px;
+  padding: 11px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.session-config dt {
+  color: #7f879f;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.session-config dd {
+  margin: 4px 0 0;
+  color: #d8dbe6;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.session-progress-info {
+  margin-top: 42px;
+  display: flex;
+  justify-content: space-between;
+  color: #969db5;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.session-progress {
+  height: 7px;
+  margin: 10px 0 25px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.session-progress span {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7557ee, #4a8cf7);
+  transition: width 0.25s ease;
+}
+
+.question-card {
+  padding: 34px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(18px);
+}
+
+.question-number {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: white;
+  background: linear-gradient(135deg, #7557ee, #4a8cf7);
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+}
+
+.question-content > span {
+  color: #a995ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.question-content h2 {
+  margin: 9px 0 28px;
+  color: white;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(21px, 3vw, 27px);
+  line-height: 1.4;
+}
+
+.question-content label {
+  display: block;
+  margin-bottom: 9px;
+  color: #d7d9e5;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.question-content textarea {
+  width: 100%;
+  padding: 16px;
+  resize: vertical;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  outline: none;
+  color: white;
+  background: rgba(9, 11, 24, 0.35);
+  font: 15px/1.65 "DM Sans", sans-serif;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.question-content textarea:focus {
+  border-color: #846bec;
+  box-shadow: 0 0 0 3px rgba(117, 87, 236, 0.14);
+}
+
+.question-content textarea::placeholder { color: #69718a; }
+
+.question-content small {
+  margin-top: 8px;
+  display: block;
+  color: #707891;
+}
+
+.session-actions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.session-button {
+  min-height: 48px;
+  padding: 0 21px;
+  border-radius: 12px;
+  font: 700 14px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+
+.session-button.secondary {
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  color: #c6cad8;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.session-button.primary {
+  border: 0;
+  color: white;
+  background: linear-gradient(135deg, #704fe5, #5487ed);
+  box-shadow: 0 12px 26px rgba(91, 74, 218, 0.25);
+}
+
+.session-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@media (max-width: 760px) {
+  .session-container { width: min(100% - 32px, 1050px); }
+  .session-brand { font-size: 14px; }
+  .session-content { padding: 45px 0 70px; }
+  .session-overview { align-items: flex-start; flex-direction: column; }
+  .session-config { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .session-config div { min-width: 0; }
+  .question-card { padding: 22px; grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .session-status { font-size: 0; }
+  .session-status span { margin: 0; }
+  .session-config { grid-template-columns: 1fr; }
+  .session-actions { flex-direction: column-reverse; }
+  .session-button { width: 100%; }
+}
+
+.session-status.recording span {
+  background: #ff6f7d;
+  box-shadow: 0 0 0 6px rgba(255, 111, 125, 0.12);
+  animation: recording-pulse 1s ease-in-out infinite;
+}
+
+@keyframes recording-pulse {
+  50% { transform: scale(0.7); opacity: 0.65; }
+}
+
+.session-mode-bar {
+  margin-bottom: 22px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.session-mode-toggle { display: flex; gap: 7px; }
+.session-mode-toggle button,
+.session-pause-button {
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #aeb4cb;
+  background: transparent;
+  font: 700 13px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.session-mode-toggle button.active { border-color: rgba(132, 107, 236, 0.45); color: white; background: rgba(112, 79, 229, 0.18); }
+.session-mode-toggle button:disabled { cursor: not-allowed; opacity: 0.45; }
+.session-pause-button { border-color: rgba(255, 255, 255, 0.1); }
+.voice-fallback { margin: 0 0 20px; padding: 13px 15px; border-radius: 12px; color: #c4c8d8; background: rgba(255, 255, 255, 0.05); }
+
+.voice-panel {
+  margin: 20px 0;
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(132, 107, 236, 0.32);
+  border-radius: 16px;
+  background: rgba(112, 79, 229, 0.07);
+}
+.voice-panel.is-recording { border-color: rgba(255, 111, 125, 0.55); }
+.voice-status-row { display: flex; align-items: center; gap: 10px; }
+.voice-status-row strong { color: white; font-size: 13px; }
+.voice-status-row small { margin-left: auto; color: #8991a9; text-transform: capitalize; }
+.voice-indicator { width: 10px; height: 10px; border-radius: 50%; background: #6f778f; }
+.voice-indicator.active { background: #ff6f7d; box-shadow: 0 0 0 6px rgba(255, 111, 125, 0.12); animation: recording-pulse 1s ease-in-out infinite; }
+.voice-controls, .recording-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.voice-controls button, .recording-controls button {
+  min-height: 39px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #d9dbea;
+  background: rgba(255, 255, 255, 0.05);
+  font: 700 12px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.voice-controls button:disabled, .recording-controls button:disabled { cursor: not-allowed; opacity: 0.5; }
+.voice-controls label { display: flex; align-items: center; gap: 7px; color: #9da4bc; font-size: 12px; font-weight: 700; }
+.voice-controls select { min-height: 37px; padding: 0 8px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 9px; color: white; background: #25283c; }
+.recording-controls .microphone-button { border: 0; color: white; background: linear-gradient(135deg, #704fe5, #5487ed); }
+.recording-controls .microphone-button span { margin-right: 7px; color: #ffb3ba; }
+.autoplay-option { margin-left: auto; display: flex; align-items: center; gap: 7px; color: #aeb4cb; font-size: 12px; }
+.live-caption { padding: 13px 15px; border-radius: 12px; background: rgba(8, 10, 22, 0.28); }
+.live-caption span { color: #a995ff; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.live-caption p { min-height: 21px; margin: 6px 0 0; color: #d8dbe7; line-height: 1.55; }
+.keyboard-help { margin: 10px 0 0; color: #7f879f; font-size: 11px; }
+
+.session-error {
+  margin: 0 0 18px;
+  color: #ff8b8b;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .session-mode-bar { align-items: stretch; flex-direction: column; }
+  .session-mode-toggle { display: grid; grid-template-columns: 1fr 1fr; }
+  .voice-status-row { align-items: flex-start; flex-wrap: wrap; }
+  .voice-status-row small { width: 100%; margin-left: 20px; }
+  .voice-controls, .recording-controls { align-items: stretch; flex-direction: column; }
+  .voice-controls button, .recording-controls button, .voice-controls label { width: 100%; justify-content: center; }
+  .autoplay-option { margin-left: 0; }
+}
