@@ -11,6 +11,7 @@ import resumeRoutes from "./routes/resumeRoutes.js";
 import scheduledInterviewRoutes from "./routes/scheduledInterviewRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+import coachRoutes from "./routes/coachRoutes.js";
 import logger from "./config/logger.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorMiddleware.js";
 import { preventNoSqlInjection, requireJsonContentType } from "./middleware/securityMiddleware.js";
@@ -90,6 +91,7 @@ app.use("/api/interviews", interviewRoutes);
 app.use("/api/resumes", resumeRoutes);
 app.use("/api/scheduled-interviews", scheduledInterviewRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/coach", coachRoutes);
 app.get("/", (req, res) => res.type("text/plain").send("AI Interview Copilot API is running"));
 
 app.use(notFoundHandler);

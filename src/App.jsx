@@ -16,6 +16,7 @@ const AccountSettings = lazy(() => import("./pages/AccountSettings"));
 const Preferences = lazy(() => import("./pages/Preferences"));
 const Resumes = lazy(() => import("./pages/Resumes"));
 const Analytics = lazy(() => import("./pages/Analytics"));
+const Coach = lazy(() => import("./pages/Coach"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
@@ -102,6 +103,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Analytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/coach"
+          element={
+            <ProtectedRoute>
+              <Coach />
             </ProtectedRoute>
           }
         />

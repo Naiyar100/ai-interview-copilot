@@ -2,6 +2,8 @@
 
 Phase 12 analytics routes and schemas are documented in [ANALYTICS.md](ANALYTICS.md). All `/api/analytics/*` routes require a Bearer JWT.
 
+Phase 13 Career Coach routes, SSE events, and payloads are documented in [COACH.md](COACH.md). All `/api/coach/*` routes require a Bearer JWT and enforce conversation ownership.
+
 Base URL: `http://localhost:5000/api`
 
 All responses use `{ "success": boolean, "message": string, "data": object }` on success and `{ "success": false, "message": string, "errors": [] }` on failure. Protected endpoints require `Authorization: Bearer <JWT>`.

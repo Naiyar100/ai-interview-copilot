@@ -6,6 +6,8 @@ The Dashboard 2.0 workspace adds authenticated weekly progress, a 12-week heatma
 
 Phase 12 adds a protected Analytics Center with global filters, previous-period KPI comparisons, performance trends, topic mastery, explainable readiness estimates, deterministic recommendations, interview comparison, saved views, and safe PDF/CSV/JSON exports. See [docs/ANALYTICS.md](docs/ANALYTICS.md).
 
+Phase 13 adds a private AI Career Coach with streamed Gemini responses, grounded user context, searchable conversation history, pin/rename/delete controls, safe Markdown and code rendering, and responsive light/dark UI. See [docs/COACH.md](docs/COACH.md).
+
 ## Architecture
 
 - Frontend: React 19, Vite, React Router, plain CSS
@@ -22,7 +24,7 @@ The backend follows route → controller → model/service → database. Secrets
 - Node.js 20 or newer
 - npm
 - MongoDB Community Server/Compass or MongoDB Atlas
-- A Gemini API key for question generation and evaluation
+- A Gemini API key for question generation, evaluation, resume analysis, and career coaching
 
 ## Installation
 

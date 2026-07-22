@@ -19,6 +19,7 @@ function ThemeProvider({ children }) {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.themePreference = preference;
+    document.documentElement.classList.toggle("theme-dark", theme === "dark");
     localStorage.setItem(THEME_KEY, preference);
   }, [preference, theme]);
 

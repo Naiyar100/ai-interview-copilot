@@ -78,7 +78,7 @@ function DashboardHome() {
             <Link to="/interview/history"><span>▤</span>Interviews</Link>
             <Link to="/resumes"><span>CV</span>Resumes</Link>
             <Link to="/analytics"><span>↗</span>Analytics</Link>
-            <a href="#coach"><span>AI</span>Coach</a>
+            <Link to="/coach"><span>AI</span>Coach</Link>
           </nav>
           <div className="sidebar-level"><span>Level {data.gamification.level}</span><strong>{data.gamification.xp} XP</strong><div className="progress-track"><i style={{ width: `${data.gamification.percentage}%` }} /></div></div>
         </aside>

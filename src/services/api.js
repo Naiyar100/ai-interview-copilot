@@ -99,6 +99,56 @@ export const createAnalyticsView = (name, filters) => apiRequest("/analytics/vie
 export const updateAnalyticsView = (id, updates) => apiRequest(`/analytics/views/${id}`, { method: "PUT", body: updates, requiresAuth: true });
 export const deleteAnalyticsView = (id) => apiRequest(`/analytics/views/${id}`, { method: "DELETE", requiresAuth: true });
 
+export const getCoachChats = (search = "") =>
+  apiRequest(`/coach/chats${search ? `?search=${encodeURIComponent(search)}` : ""}`, { requiresAuth: true });
+
+export const createCoachChat = (title) =>
+  apiRequest("/coach/chats", { method: "POST", body: { title }, requiresAuth: true });
+
+export const getCoachChat = (chatId) => apiRequest(`/coach/chats/${chatId}`, { requiresAuth: true });
+
+export const updateCoachChat = (chatId, updates) =>
+  apiRequest(`/coach/chats/${chatId}`, { method: "PATCH", body: updates, requiresAuth: true });
+
+export const deleteCoachChat = (chatId) =>
+  apiRequest(`/coach/chats/${chatId}`, { method: "DELETE", requiresAuth: true });
+
+export const streamCoachMessage = async ({ message, chatId, regenerate = false, signal, onEvent }) => {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const response = await fetch(`${API_URL}/coach/chat`, {
+    method: "POST",
+    headers: { Accept: "text/event-stream", "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: JSON.stringify({ message, chatId, regenerate }), signal,
+  });
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    if (response.status === 401) window.dispatchEvent(new Event("auth:unauthorized"));
+    const error = new Error(payload.message || "Career coach request failed"); error.statusCode = response.status; throw error;
+  }
+  if (!response.body) throw new Error("Streaming is not supported by this browser");
+  const reader = response.body.getReader(); const decoder = new TextDecoder();
+  let buffer = "";
+  const emitBlocks = (final = false) => {
+    const normalized = buffer.replaceAll("\r\n", "\n");
+    const blocks = normalized.split("\n\n");
+    buffer = final ? "" : blocks.pop() || "";
+    for (const block of blocks) {
+      const event = block.split("\n").find((line) => line.startsWith("event:"))?.slice(6).trim() || "message";
+      const dataText = block.split("\n").filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trim()).join("\n");
+      if (!dataText) continue;
+      const data = JSON.parse(dataText);
+      onEvent?.(event, data);
+      if (event === "error") throw new Error(data.message || "Career coach response failed");
+    }
+  };
+  while (true) {
+    const { done, value } = await reader.read();
+    buffer += decoder.decode(value || new Uint8Array(), { stream: !done });
+    emitBlocks(done);
+    if (done) break;
+  }
+};
+
 export const downloadBase64File = ({ contentBase64, filename, mimeType }) => {
   const bytes = Uint8Array.from(atob(contentBase64), (character) => character.charCodeAt(0));
   const url = URL.createObjectURL(new Blob([bytes], { type: mimeType }));
