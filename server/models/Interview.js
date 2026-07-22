@@ -166,6 +166,8 @@ interviewSchema.index({ user: 1, resume: 1 });
 interviewSchema.index({ user: 1, score: -1 });
 interviewSchema.index({ user: 1, "evaluations.evaluatedAt": -1 });
 interviewSchema.index({ user: 1, interviewType: 1, createdAt: -1 });
+interviewSchema.index({ user: 1, status: 1, completedAt: -1 });
+interviewSchema.index({ user: 1, role: 1, completedAt: -1 });
 
 const Interview = mongoose.model("Interview", interviewSchema);
 

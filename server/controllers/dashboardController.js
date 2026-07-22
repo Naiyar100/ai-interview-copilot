@@ -1,4 +1,5 @@
 import { sendSuccess } from "../utils/apiResponse.js";
+import { invalidateAnalyticsCache } from "../services/analytics/cacheService.js";
 import {
   buildDashboardOverview,
   getActivityPage,
@@ -36,8 +37,11 @@ export const getDashboardSummary = async (req, res) => {
 export const getDailyGoal = async (req, res) =>
   sendSuccess(res, 200, "Daily goal fetched successfully", { goal: await getOrCreateGoal(req.user._id, timezoneFrom(req)) });
 
-export const updateDailyGoal = async (req, res) =>
-  sendSuccess(res, 200, "Daily goal updated successfully", { goal: await updateGoal(req.user._id, req.body) });
+export const updateDailyGoal = async (req, res) => {
+  const goal = await updateGoal(req.user._id, req.body);
+  invalidateAnalyticsCache(req.user._id.toString());
+  return sendSuccess(res, 200, "Daily goal updated successfully", { goal });
+};
 
 export const getDashboardActivity = async (req, res) =>
   sendSuccess(res, 200, "Dashboard activity fetched successfully", { activity: await getActivityPage(req.user._id, req.query.limit || 30) });

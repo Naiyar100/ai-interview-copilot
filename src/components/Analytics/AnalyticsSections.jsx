@@ -45,6 +45,15 @@ export function BreakdownPanels({ data }) {
   </div>;
 }
 
+export function EvidencePanels({ data }) {
+  const renderInsights = (items, emptyTitle) => items.length ? <div className="insight-list">{items.map((item) => <article key={item.topic}><div><strong>{item.topic}</strong><span>{item.averageScore}% · {item.attempts} attempts</span></div><b>{item.confidence}</b><p>{item.nextAction}</p></article>)}</div> : <EmptyAnalytics title={emptyTitle} description="More evaluated topic attempts are needed for reliable evidence." />;
+  const dimensions = data.communicationTechnical;
+  return <div className="analytics-grid two">
+    <section className="analytics-card"><div className="analytics-card-head"><div><span>Evidence</span><h2>Strengths and weaknesses</h2></div></div><div className="strength-weak-grid"><div><h3>Strongest topics</h3>{renderInsights(data.strengths, "No proven strengths yet")}</div><div><h3>Priority weaknesses</h3>{renderInsights(data.weaknesses, "No measured weaknesses yet")}</div></div></section>
+    <section className="analytics-card"><div className="analytics-card-head"><div><span>Evaluation dimensions</span><h2>Communication vs technical</h2></div></div><div className="mini-metrics"><div><strong>{formatValue(dimensions.technicalScore, "%")}</strong><span>Technical</span></div><div><strong>{formatValue(dimensions.communicationScore, "%")}</strong><span>Communication</span></div><div><strong>{formatValue(dimensions.clarityScore, "%")}</strong><span>Clarity</span></div><div><strong>{formatValue(dimensions.completenessScore, "%")}</strong><span>Completeness</span></div></div><p className="analytics-note">{dimensions.note}</p></section>
+  </div>;
+}
+
 export function QualityTimePanels({ data }) {
   const quality = data.answerQuality; const practice = data.practiceTime;
   return <div className="analytics-grid two">
@@ -57,7 +66,7 @@ export function VoiceResumePanels({ data }) {
   const voice = data.voiceAnalytics; const resume = data.resumeAnalytics;
   return <div className="analytics-grid two">
     <section className="analytics-card"><div className="analytics-card-head"><div><span>Voice mode</span><h2>Voice analytics</h2></div></div>{data.dataAvailability.voice ? <><div className="mini-metrics"><div><strong>{voice.completed}</strong><span>Completed</span></div><div><strong>{voice.usageRate}%</strong><span>Usage</span></div><div><strong>{formatValue(voice.averageTranscriptWords)}</strong><span>Transcript words</span></div><div><strong>{formatValue(voice.averageVoiceScore, "%")}</strong><span>Voice score</span></div></div><p className="analytics-note">{voice.note}</p></> : <EmptyAnalytics title="No voice sessions yet" description="Complete a voice-mode interview to see transcript and usage insights." />}</section>
-    <section className="analytics-card"><div className="analytics-card-head"><div><span>Resume history</span><h2>Resume improvement</h2></div><Link to="/resumes">Manage resumes</Link></div>{data.dataAvailability.resumes ? <><div className="mini-metrics"><div><strong>{resume.currentScore}%</strong><span>{resume.scoreLabel}</span></div><div><strong>{resume.versions}</strong><span>Versions</span></div><div><strong>{resume.scoreChange == null ? "—" : `${resume.scoreChange > 0 ? "+" : ""}${resume.scoreChange}`}</strong><span>Change</span></div><div><strong>{resume.keywordCount}</strong><span>Keywords</span></div></div><p className="analytics-note">{resume.note}</p></> : <EmptyAnalytics title="No resume history" description="Upload a PDF resume to unlock completeness and keyword-coverage analytics." />}</section>
+    <section className="analytics-card"><div className="analytics-card-head"><div><span>Resume history</span><h2>Resume improvement</h2></div><Link to="/resumes">Manage resumes</Link></div>{data.dataAvailability.resumes ? <><div className="mini-metrics"><div><strong>{resume.currentScore}%</strong><span>{resume.scoreLabel}</span></div><div><strong>{resume.versions}</strong><span>Versions</span></div><div><strong>{resume.scoreChange == null ? "—" : `${resume.scoreChange > 0 ? "+" : ""}${resume.scoreChange}`}</strong><span>Change</span></div><div><strong>{resume.keywordCount}</strong><span>Keywords</span></div></div>{resume.history?.length > 1 && <div className="resume-history">{resume.history.map((item) => <span key={item.id}><strong>{item.name}</strong><b>{item.score}%</b><small>{new Date(item.analyzedAt).toLocaleDateString()}</small></span>)}</div>}<p className="analytics-note">{resume.note}</p></> : <EmptyAnalytics title="No resume history" description="Upload a PDF resume to unlock completeness and keyword-coverage analytics." />}</section>
   </div>;
 }
 

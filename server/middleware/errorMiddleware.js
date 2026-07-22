@@ -25,6 +25,9 @@ export const errorHandler = (error, req, res, next) => {
   } else if (error.code === 11000 && error.keyPattern?.checksum) {
     statusCode = 409;
     message = "This resume has already been uploaded";
+  } else if (error.code === 11000 && error.keyPattern?.name) {
+    statusCode = 409;
+    message = "A saved analytics view with this name already exists";
   } else if (error.code === 11000) {
     statusCode = 409;
     message = "An account with this email already exists";

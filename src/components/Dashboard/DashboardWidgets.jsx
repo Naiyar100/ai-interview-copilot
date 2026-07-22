@@ -63,6 +63,7 @@ export function QuickActions({ data }) {
     { icon: "▶", title: "Continue", description: "Resume saved answers", to: data.continueInterview ? `/interview/session/${data.continueInterview.id}` : "", show: Boolean(data.continueInterview) },
     { icon: "CV", title: data.activeResume ? "Manage resume" : "Upload resume", description: data.activeResume ? "Update interview context" : "Personalize questions", to: "/resumes", show: true },
     { icon: "↗", title: "Interview history", description: "Review all sessions", to: "/interview/history", show: data.summary.totalInterviews > 0 },
+    { icon: "AN", title: "Analytics Center", description: "Explore performance trends", to: "/analytics", show: data.summary.totalInterviews > 0 },
     { icon: "AI", title: "Open feedback", description: "Review your latest report", to: feedbackInterview ? `/interview/report/${feedbackInterview.id}` : "", show: Boolean(feedbackInterview) },
     { icon: "ME", title: "Profile", description: "Manage your account", to: "/profile", show: true },
     { icon: "◎", title: "Practice weak topic", description: data.weakTopics[0]?.topic || "Build topic insights", to: "/interview/setup", show: data.weakTopics.length > 0 },

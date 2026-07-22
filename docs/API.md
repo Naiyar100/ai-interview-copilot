@@ -1,5 +1,7 @@
 # API reference
 
+Phase 12 analytics routes and schemas are documented in [ANALYTICS.md](ANALYTICS.md). All `/api/analytics/*` routes require a Bearer JWT.
+
 Base URL: `http://localhost:5000/api`
 
 All responses use `{ "success": boolean, "message": string, "data": object }` on success and `{ "success": false, "message": string, "errors": [] }` on failure. Protected endpoints require `Authorization: Bearer <JWT>`.

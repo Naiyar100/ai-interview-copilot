@@ -4,6 +4,8 @@ AI Interview Copilot is a React and Express application for private, AI-assisted
 
 The Dashboard 2.0 workspace adds authenticated weekly progress, a 12-week heatmap, daily goals, streaks, XP, badges, topic insights, deterministic coaching recommendations, recent activity, and scheduled practice sessions. See [docs/DASHBOARD.md](docs/DASHBOARD.md).
 
+Phase 12 adds a protected Analytics Center with global filters, previous-period KPI comparisons, performance trends, topic mastery, explainable readiness estimates, deterministic recommendations, interview comparison, saved views, and safe PDF/CSV/JSON exports. See [docs/ANALYTICS.md](docs/ANALYTICS.md).
+
 ## Architecture
 
 - Frontend: React 19, Vite, React Router, plain CSS

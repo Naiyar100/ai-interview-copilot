@@ -15,6 +15,7 @@ const Profile = lazy(() => import("./pages/Profile"));
 const AccountSettings = lazy(() => import("./pages/AccountSettings"));
 const Preferences = lazy(() => import("./pages/Preferences"));
 const Resumes = lazy(() => import("./pages/Resumes"));
+const Analytics = lazy(() => import("./pages/Analytics"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
@@ -93,6 +94,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Resumes />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <Analytics />
             </ProtectedRoute>
           }
         />

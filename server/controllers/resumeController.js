@@ -84,6 +84,7 @@ export const uploadResume = async (req, res, next) => {
     );
     createdResume.isActive = true;
     await createdResume.save();
+    invalidateAnalyticsCache(req.user._id.toString());
     const isFirstResume = (await Resume.countDocuments({ user: req.user._id })) === 1;
     void recordActivitySafe({
       user: req.user._id, eventKey: `resume:${createdResume._id}:uploaded`, type: "resume_uploaded",

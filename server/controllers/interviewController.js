@@ -193,6 +193,7 @@ export const createInterview = async (req, res, next) => {
     answeredQuestions: 0,
     status: "draft",
   });
+  invalidateAnalyticsCache(req.user._id.toString());
   void recordActivitySafe({
     user: req.user._id, eventKey: `interview:${interview._id}:created`, type: "interview_created",
     title: "Interview created", description: `${interview.role} practice started`,
@@ -228,6 +229,7 @@ const saveGeneratedQuestions = async (interview, generatedQuestions) => {
   interview.answeredQuestions = 0;
   interview.questionsGeneratedAt = new Date();
   await interview.save();
+  invalidateAnalyticsCache(interview.user.toString());
 };
 
 export const generateInterviewQuestions = async (req, res, next) => {
@@ -406,6 +408,7 @@ export const updateInterview = async (req, res, next) => {
   }
 
   await interview.save();
+  invalidateAnalyticsCache(req.user._id.toString());
 
   interview.answers.forEach((answer, index) => {
     if (!answer?.trim()) return;
@@ -464,6 +467,7 @@ export const completeInterview = async (req, res, next) => {
   );
   interview.answeredQuestions = interview.answers.filter((answer) => answer.trim()).length;
   await interview.save();
+  invalidateAnalyticsCache(req.user._id.toString());
 
   void recordActivitySafe({
     user: req.user._id, eventKey: `interview:${interview._id}:completed`, type: "interview_completed",

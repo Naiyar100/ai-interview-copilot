@@ -14,32 +14,33 @@ export default function useAnalytics() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const requestRef = useRef(0);
+  const controllerRef = useRef(null);
+  const dataRef = useRef(null);
 
-  const load = useCallback(async ({ immediate = false } = {}) => {
+  const load = useCallback(async () => {
     const requestId = ++requestRef.current;
+    controllerRef.current?.abort();
     const controller = new AbortController();
-    if (data) setRefreshing(true); else setLoading(true);
+    controllerRef.current = controller;
+    if (dataRef.current) setRefreshing(true); else setLoading(true);
     setError("");
     try {
       const response = await getAnalyticsOverview(filters, controller.signal);
-      if (requestId === requestRef.current) setData(response.data);
+      if (requestId === requestRef.current) { dataRef.current = response.data; setData(response.data); }
     } catch (requestError) {
       if (requestError.name !== "AbortError" && requestId === requestRef.current) setError(requestError.message || "Analytics could not load");
     } finally {
       if (requestId === requestRef.current) { setLoading(false); setRefreshing(false); }
     }
-    return () => controller.abort();
-  }, [filters, data]);
+  }, [filters]);
 
   useEffect(() => {
     const timer = setTimeout(() => load(), 280);
-    return () => { clearTimeout(timer); requestRef.current += 1; };
-  // Loading intentionally follows the normalized filter object.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]);
+    return () => { clearTimeout(timer); controllerRef.current?.abort(); requestRef.current += 1; };
+  }, [filters, load]);
 
   const setFilter = (name, value) => setFilters((current) => ({ ...current, [name]: value, ...(name === "preset" && value !== "custom" ? { startDate: "", endDate: "" } : {}) }));
   const clearFilters = () => setFilters((current) => ({ ...initialFilters, timezone: current.timezone }));
   const applyView = (viewFilters) => setFilters({ ...initialFilters, ...viewFilters, timezone: viewFilters.timezone || initialFilters.timezone });
-  return { data, filters, setFilter, clearFilters, applyView, loading, refreshing, error, retry: () => load({ immediate: true }) };
+  return { data, filters, setFilter, clearFilters, applyView, loading, refreshing, error, retry: load };
 }

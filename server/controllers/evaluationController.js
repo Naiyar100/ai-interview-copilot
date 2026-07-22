@@ -3,6 +3,7 @@ import Interview from "../models/Interview.js";
 import { evaluateInterviewAnswers } from "../services/evaluation/evaluator.js";
 import { sendSuccess } from "../utils/apiResponse.js";
 import { recordActivitySafe } from "../services/dashboard/activityService.js";
+import { invalidateAnalyticsCache } from "../services/analytics/cacheService.js";
 
 const createHttpError = (statusCode, message) => {
   const error = new Error(message);
@@ -71,6 +72,7 @@ const createAndStoreEvaluation = async (interview, replaceHistory = false) => {
   interview.score = result.overallScore;
   interview.aiFeedback = result;
   await interview.save();
+  invalidateAnalyticsCache(interview.user.toString());
   return evaluation;
 };
 

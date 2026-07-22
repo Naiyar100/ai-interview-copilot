@@ -71,8 +71,8 @@ export const buildInterviewFilter = (userId, filters) => {
   const filter = { user: userId };
   if (filters.startDate || filters.endDate) {
     filter.createdAt = {};
-    if (filters.startDate) filter.createdAt.$gte = new Date(`${filters.startDate}T00:00:00.000Z`);
-    if (filters.endDate) filter.createdAt.$lt = new Date(`${addUtcDays(filters.endDate, 1)}T00:00:00.000Z`);
+    if (filters.startDate) filter.createdAt.$gte = dateKeyToUtc(filters.startDate, filters.timezone);
+    if (filters.endDate) filter.createdAt.$lt = dateKeyToUtc(addUtcDays(filters.endDate, 1), filters.timezone);
   }
   if (filters.role) filter.role = filters.role;
   if (filters.interviewType) filter.interviewType = filters.interviewType;
@@ -87,6 +87,22 @@ export const buildInterviewFilter = (userId, filters) => {
   }
   if (filters.category) filter["generatedQuestions.category"] = filters.category;
   return filter;
+};
+
+export const dateKeyToUtc = (dateKey, timezone) => {
+  const target = Date.parse(`${dateKey}T00:00:00.000Z`);
+  let candidate = target;
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23",
+  });
+  for (let iteration = 0; iteration < 2; iteration += 1) {
+    const parts = formatter.formatToParts(new Date(candidate));
+    const part = (type) => Number(parts.find((item) => item.type === type)?.value);
+    const represented = Date.UTC(part("year"), part("month") - 1, part("day"), part("hour"), part("minute"), part("second"));
+    candidate += target - represented;
+  }
+  return new Date(candidate);
 };
 
 export const previousPeriodFilters = (filters) => {

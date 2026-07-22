@@ -77,6 +77,7 @@ function DashboardHome() {
             <Link to="/interview/setup"><span>＋</span>New interview</Link>
             <Link to="/interview/history"><span>▤</span>Interviews</Link>
             <Link to="/resumes"><span>CV</span>Resumes</Link>
+            <Link to="/analytics"><span>↗</span>Analytics</Link>
             <a href="#coach"><span>AI</span>Coach</a>
           </nav>
           <div className="sidebar-level"><span>Level {data.gamification.level}</span><strong>{data.gamification.xp} XP</strong><div className="progress-track"><i style={{ width: `${data.gamification.percentage}%` }} /></div></div>
@@ -89,7 +90,7 @@ function DashboardHome() {
               <label className="theme-control"><span className="sr-only">Color theme</span><select value={preference} onChange={(event) => setPreference(event.target.value)} aria-label="Color theme"><option value="system">System theme</option><option value="light">Light theme</option><option value="dark">Dark theme</option></select></label>
               <div className="dashboard-profile">
                 <button className="profile-trigger" type="button" aria-label="Open profile menu"><span className="profile-avatar">{getInitials(user.name)}</span><span>{user.name.split(" ")[0]}</span></button>
-                <div className="profile-menu"><Link to="/profile">My Profile</Link><Link to="/account/settings">Account Settings</Link><Link to="/resumes">My Resumes</Link><button type="button" onClick={handleLogout}>Logout</button></div>
+                <div className="profile-menu"><Link to="/profile">My Profile</Link><Link to="/analytics">Analytics Center</Link><Link to="/account/settings">Account Settings</Link><Link to="/resumes">My Resumes</Link><button type="button" onClick={handleLogout}>Logout</button></div>
               </div>
             </div>
           </header>

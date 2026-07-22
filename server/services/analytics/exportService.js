@@ -33,10 +33,8 @@ const buildPdf = (user, analytics) => {
     "", "Recommendations", ...analytics.recommendations.slice(0, 5).map((item) => `${item.priority}: ${item.title} - ${item.evidence}`),
     "", "Readiness is an estimate based on practice data, not a hiring prediction.",
   ].map(safePdfText);
-  let y = 760;
   const stream = ["BT", "/F1 11 Tf", "50 800 Td", ...lines.flatMap((line, index) => {
     if (index === 0) return ["/F1 16 Tf", `(${line}) Tj`, "/F1 11 Tf", "0 -28 Td"];
-    y -= 16;
     return [`(${line.slice(0, 105)}) Tj`, "0 -16 Td"];
   }), "ET"].join("\n");
   const objects = [

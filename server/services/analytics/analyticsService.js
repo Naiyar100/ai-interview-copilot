@@ -8,7 +8,7 @@ import companyProfiles from "../../config/companyPreparationProfiles.js";
 import { BADGES } from "../dashboard/gamificationService.js";
 import { addUtcDays, calculateStreak, toDateKey } from "../dashboard/dateUtils.js";
 import { analyticsCacheKey, getCachedAnalytics, setCachedAnalytics } from "./cacheService.js";
-import { buildInterviewFilter, previousPeriodFilters } from "./filterBuilder.js";
+import { buildInterviewFilter, dateKeyToUtc, previousPeriodFilters } from "./filterBuilder.js";
 
 const round = (value, digits = 1) => Number((Number(value) || 0).toFixed(digits));
 const average = (values) => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
@@ -42,9 +42,9 @@ const interviewSummary = (interviews) => {
     totalInterviews: interviews.length,
     completedInterviews: completed.length,
     completionRate: percent(completed.length, interviews.length),
-    averageScore: round(average(scores)), highestScore: scores.length ? Math.max(...scores) : null,
-    lowestScore: scores.length ? Math.min(...scores) : null, medianScore: round(median(scores)),
-    questionsAnswered: answered, averageQuestionScore: round(average(questionScores)),
+    averageScore: scores.length ? round(average(scores)) : null, highestScore: scores.length ? Math.max(...scores) : null,
+    lowestScore: scores.length ? Math.min(...scores) : null, medianScore: scores.length ? round(median(scores)) : null,
+    questionsAnswered: answered, averageQuestionScore: questionScores.length ? round(average(questionScores)) : null,
     totalPracticeMinutes: round(totalSeconds / 60),
     averageInterviewMinutes: completed.length ? round(totalSeconds / completed.length / 60) : null,
     evaluatedInterviews: evaluated.length,
@@ -240,7 +240,8 @@ const resumeScore = (resume) => {
 
 const resumeAnalytics = (resumes) => {
   const ordered = [...resumes].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-  const current = ordered.at(-1); const previous = ordered.at(-2);
+  const current = ordered.find((item) => item.isActive) || ordered.at(-1);
+  const previous = [...ordered].filter((item) => item._id.toString() !== current?._id.toString()).at(-1);
   const currentScore = resumeScore(current); const previousScore = resumeScore(previous);
   return {
     versions: resumes.length, currentResumeId: current?._id || null, currentScore, previousScore,
@@ -283,7 +284,7 @@ const roleAnalytics = (interviews, topics, consistency, resumes) => breakdown(in
   const scored = subset.filter((interview) => interview.score != null);
   const score = average(scored.map((interview) => interview.score));
   const categories = unique(questionRecords(subset).flatMap((record) => [record.category, ...record.topics]));
-  const difficulty = Math.max(0, ...subset.map((interview) => ({ Easy: 40, Medium: 70, Hard: 100 }[interview.difficulty] || 0));
+  const difficulty = Math.max(0, ...subset.map((interview) => ({ Easy: 40, Medium: 70, Hard: 100 }[interview.difficulty] || 0)));
   const resumeRelevance = resumes.at(-1) ? Math.min(unique([...(resumes.at(-1).summary?.skills || []), ...(resumes.at(-1).summary?.technologies || [])]).length / 12 * 100, 100) : null;
   const recencyDays = item.lastPracticedAt ? (Date.now() - new Date(item.lastPracticedAt)) / 86400000 : Infinity;
   const factors = {
@@ -373,8 +374,8 @@ export const buildAnalyticsOverview = async (user, filters, { useCache = true } 
   const activityFilter = { user: user._id };
   if (filters.startDate || filters.endDate) {
     activityFilter.occurredAt = {};
-    if (filters.startDate) activityFilter.occurredAt.$gte = new Date(`${filters.startDate}T00:00:00Z`);
-    if (filters.endDate) activityFilter.occurredAt.$lt = new Date(`${addUtcDays(filters.endDate, 1)}T00:00:00Z`);
+    if (filters.startDate) activityFilter.occurredAt.$gte = dateKeyToUtc(filters.startDate, filters.timezone);
+    if (filters.endDate) activityFilter.occurredAt.$lt = dateKeyToUtc(addUtcDays(filters.endDate, 1), filters.timezone);
   }
   const [interviews, previousInterviews, activities, allActivities, resumes, goal, progress, badges] = await Promise.all([
     Interview.find(currentFilter).select("role experienceLevel difficulty interviewType status score duration totalQuestions questions generatedQuestions answers transcripts voiceMetadata resume evaluations startedAt completedAt createdAt updatedAt").sort({ createdAt: 1 }).lean(),
