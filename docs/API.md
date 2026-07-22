@@ -4,6 +4,8 @@ Phase 12 analytics routes and schemas are documented in [ANALYTICS.md](ANALYTICS
 
 Phase 13 Career Coach routes, SSE events, and payloads are documented in [COACH.md](COACH.md). All `/api/coach/*` routes require a Bearer JWT and enforce conversation ownership.
 
+Phase 14 ATS Resume Reviewer routes, scoring inputs, versioning behavior, comparison, and exports are documented in [ATS_RESUME_REVIEWER.md](ATS_RESUME_REVIEWER.md). All `/api/resume/*` routes require a Bearer JWT and enforce resume ownership.
+
 Base URL: `http://localhost:5000/api`
 
 All responses use `{ "success": boolean, "message": string, "data": object }` on success and `{ "success": false, "message": string, "errors": [] }` on failure. Protected endpoints require `Authorization: Bearer <JWT>`.

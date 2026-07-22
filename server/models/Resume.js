@@ -28,6 +28,7 @@ const resumeSchema = new mongoose.Schema(
     checksum: { type: String, required: true, select: false },
     extractedText: { type: String, required: true, select: false },
     summary: { type: resumeSummarySchema, default: () => ({}) },
+    version: { type: Number, min: 1 },
     extractionStatus: {
       type: String,
       enum: ["ready"],
@@ -40,6 +41,8 @@ const resumeSchema = new mongoose.Schema(
 );
 
 resumeSchema.index({ user: 1, createdAt: -1 });
+resumeSchema.index({ user: 1, version: -1 });
+resumeSchema.index({ user: 1, version: 1 }, { unique: true, sparse: true });
 resumeSchema.index({ user: 1, checksum: 1 }, { unique: true });
 resumeSchema.index(
   { user: 1, isActive: 1 },

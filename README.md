@@ -8,6 +8,8 @@ Phase 12 adds a protected Analytics Center with global filters, previous-period 
 
 Phase 13 adds a private AI Career Coach with streamed Gemini responses, grounded user context, searchable conversation history, pin/rename/delete controls, safe Markdown and code rendering, and responsive light/dark UI. See [docs/COACH.md](docs/COACH.md).
 
+Phase 14 extends the private Resume Library with ATS and resume scores, target keyword analysis, missing skills, action-verb guidance, database-backed versions, comparison, grounded AI improvements, and PDF/CSV reports. See [docs/ATS_RESUME_REVIEWER.md](docs/ATS_RESUME_REVIEWER.md).
+
 ## Architecture
 
 - Frontend: React 19, Vite, React Router, plain CSS

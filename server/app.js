@@ -89,6 +89,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/health", healthRoutes);
 app.use("/api/interviews", interviewRoutes);
 app.use("/api/resumes", resumeRoutes);
+app.use("/api/resume", resumeRoutes);
 app.use("/api/scheduled-interviews", scheduledInterviewRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/coach", coachRoutes);

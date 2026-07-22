@@ -4,6 +4,8 @@ Phase 12 adds backend coverage for analytics authorization, empty data, score/me
 
 Phase 13 adds backend coverage for Coach authorization, ownership, CRUD/search, SSE streaming persistence, regeneration, and validation. Frontend coverage includes suggested prompts, streaming updates, history search and actions, plus safe Markdown/code rendering. See [COACH.md](COACH.md#manual-testing).
 
+Phase 14 adds backend coverage for PDF versioning, baseline/targeted scoring, persistence, ownership, comparison, grounded AI improvements, deletion, and valid PDF/CSV exports. Frontend coverage includes score rendering, keyword gaps, targeted analysis, suggestions, version comparison, exports, empty/loading states, and theme controls. See [ATS_RESUME_REVIEWER.md](ATS_RESUME_REVIEWER.md#manual-testing).
+
 ## Automated coverage matrix
 
 Backend Jest/Supertest integration tests cover registration, login, safe user output, JWT protection, validation, NoSQL injection rejection, security headers, CORS, health monitoring, interview CRUD, ownership, pagination, filters, search, sorting, voice transcript persistence, AI generation, AI evaluation, duplicate evaluation prevention, provider failure mapping, resume listing, resume ownership, and invalid uploads.

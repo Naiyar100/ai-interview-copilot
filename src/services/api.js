@@ -276,6 +276,27 @@ export const deleteInterview = async (interviewId) => {
 export const getResumes = () =>
   apiRequest("/resumes", { requiresAuth: true });
 
+export const getResumeHistory = () =>
+  apiRequest("/resume/history", { requiresAuth: true });
+
+export const getResumeAtsAnalysis = (resumeId, targetRole = "") => {
+  const query = new URLSearchParams({ resumeId });
+  if (targetRole) query.set("targetRole", targetRole);
+  return apiRequest(`/resume/analysis?${query}`, { requiresAuth: true });
+};
+
+export const analyzeResumeForAts = (resumeId, targetRole = "", jobDescription = "") =>
+  apiRequest("/resume/analysis", { method: "POST", body: { resumeId, targetRole, jobDescription }, requiresAuth: true });
+
+export const compareResumeVersions = (resumeIds, targetRole = "", jobDescription = "") =>
+  apiRequest("/resume/compare", { method: "POST", body: { resumeIds, targetRole, jobDescription }, requiresAuth: true });
+
+export const improveResumeWithAi = (resumeId, targetRole = "", jobDescription = "") =>
+  apiRequest("/resume/improve", { method: "POST", body: { resumeId, targetRole, jobDescription }, requiresAuth: true });
+
+export const exportResumeReview = (resumeId, format, targetRole = "", jobDescription = "") =>
+  apiRequest("/resume/export", { method: "POST", body: { resumeId, format, targetRole, jobDescription }, requiresAuth: true });
+
 export const getResume = (resumeId) =>
   apiRequest(`/resumes/${resumeId}`, { requiresAuth: true });
 
@@ -297,7 +318,7 @@ export const uploadResume = (file, onProgress = () => {}) =>
     const formData = new FormData();
     formData.append("resume", file);
 
-    request.open("POST", `${API_URL}/resumes`);
+    request.open("POST", `${API_URL}/resume/upload`);
     request.setRequestHeader("Accept", "application/json");
     const authToken = localStorage.getItem(TOKEN_KEY);
     if (authToken) request.setRequestHeader("Authorization", `Bearer ${authToken}`);

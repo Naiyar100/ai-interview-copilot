@@ -9,9 +9,11 @@ import InterviewReport from "../pages/InterviewReport";
 const mocks = vi.hoisted(() => ({
   createInterview: vi.fn(), generateInterviewQuestions: vi.fn(), getResumes: vi.fn(),
   uploadResume: vi.fn(), setActiveResume: vi.fn(), deleteResume: vi.fn(),
+  analyzeResumeForAts: vi.fn(), compareResumeVersions: vi.fn(), improveResumeWithAi: vi.fn(), exportResumeReview: vi.fn(), downloadBase64File: vi.fn(),
   getInterviewEvaluations: vi.fn(), reevaluateInterview: vi.fn(),
 }));
 vi.mock("../services/api", () => mocks);
+vi.mock("../context/ThemeContext", () => ({ useTheme: () => ({ preference: "dark", setPreference: vi.fn() }) }));
 
 beforeEach(() => Object.values(mocks).forEach((mock) => mock.mockReset()));
 
@@ -45,11 +47,11 @@ describe("interview, resume and report flows", () => {
       return { data: { file } };
     });
     render(<MemoryRouter><Resumes /></MemoryRouter>);
-    await screen.findByText("No resumes uploaded");
+    await screen.findByText("No resume versions yet");
     const file = new File(["pdf"], "resume.pdf", { type: "application/pdf" });
-    await user.upload(screen.getByLabelText(/Upload PDF Resume/), file);
+    await user.upload(screen.getByLabelText(/Upload a new PDF version/), file);
     expect(mocks.uploadResume).toHaveBeenCalled();
-    expect(await screen.findByText(/Resume uploaded, analyzed/)).toBeInTheDocument();
+    expect(await screen.findByText(/Resume uploaded, versioned, analyzed/)).toBeInTheDocument();
   });
 
   test("renders stored AI evaluation feedback", async () => {

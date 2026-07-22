@@ -34,12 +34,14 @@ const renderTextBlocks = (text, keyPrefix) => {
     const heading = line.match(/^(#{1,3})\s+(.+)$/);
     if (heading) { const Tag = `h${heading[1].length + 2}`; output.push(<Tag key={`${keyPrefix}-${index}`}>{renderInline(heading[2])}</Tag>); index += 1; continue; }
     if (/^[-*]\s+/.test(line)) {
+      const listIndex = index;
       const items = []; while (index < lines.length && /^[-*]\s+/.test(lines[index])) { items.push(lines[index].replace(/^[-*]\s+/, "")); index += 1; }
-      output.push(<ul key={`${keyPrefix}-${index}`}>{items.map((item, itemIndex) => <li key={itemIndex}>{renderInline(item)}</li>)}</ul>); continue;
+      output.push(<ul key={`${keyPrefix}-${listIndex}`}>{items.map((item, itemIndex) => <li key={itemIndex}>{renderInline(item)}</li>)}</ul>); continue;
     }
     if (/^\d+\.\s+/.test(line)) {
+      const listIndex = index;
       const items = []; while (index < lines.length && /^\d+\.\s+/.test(lines[index])) { items.push(lines[index].replace(/^\d+\.\s+/, "")); index += 1; }
-      output.push(<ol key={`${keyPrefix}-${index}`}>{items.map((item, itemIndex) => <li key={itemIndex}>{renderInline(item)}</li>)}</ol>); continue;
+      output.push(<ol key={`${keyPrefix}-${listIndex}`}>{items.map((item, itemIndex) => <li key={itemIndex}>{renderInline(item)}</li>)}</ol>); continue;
     }
     if (line.startsWith("> ")) { output.push(<blockquote key={`${keyPrefix}-${index}`}>{renderInline(line.slice(2))}</blockquote>); index += 1; continue; }
     output.push(<p key={`${keyPrefix}-${index}`}>{renderInline(line)}</p>); index += 1;

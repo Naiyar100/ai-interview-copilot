@@ -36,7 +36,7 @@ export const requireJsonContentType = (req, res, next) => {
   if (
     ["POST", "PUT", "PATCH"].includes(req.method) &&
     hasRequestBody &&
-    req.path !== "/api/resumes" &&
+    !["/api/resumes", "/api/resume", "/api/resume/upload"].includes(req.path) &&
     !req.is("application/json")
   ) {
     const error = new Error("Content-Type must be application/json");

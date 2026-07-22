@@ -15,6 +15,7 @@
   "type": "module",
   "jest": {
     "testEnvironment": "node",
+    "cacheDirectory": "<rootDir>/.jest-cache",
     "transform": {},
     "setupFiles": ["<rootDir>/tests/setEnv.js"],
     "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
