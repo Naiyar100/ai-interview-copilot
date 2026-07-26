@@ -37,6 +37,18 @@ export const errorHandler = (error, req, res, next) => {
     errors = Object.values(error.errors).map(
       (validationError) => validationError.message,
     );
+  } else if (error.name === "CastError") {
+    statusCode = 400;
+    message = "Invalid resource identifier";
+  } else if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
+    statusCode = 401;
+    message = "Authentication required";
+  } else if (error instanceof SyntaxError && error.status === 400 && "body" in error) {
+    statusCode = 400;
+    message = "Request body contains invalid JSON";
+  } else if (["MongoNetworkError", "MongooseServerSelectionError"].includes(error.name)) {
+    statusCode = 503;
+    message = "Database service is temporarily unavailable";
   } else if (statusCode === 500) {
     message = "Internal server error";
   }

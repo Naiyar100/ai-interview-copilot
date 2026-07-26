@@ -17,11 +17,12 @@ const Preferences = lazy(() => import("./pages/Preferences"));
 const Resumes = lazy(() => import("./pages/Resumes"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const Coach = lazy(() => import("./pages/Coach"));
+const Gamification = lazy(() => import("./pages/Gamification"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   return (
-    <Suspense fallback={<div role="status">Loading page...</div>}>
+    <Suspense fallback={<div className="app-loading" role="status" aria-live="polite"><span aria-hidden="true" />Loading page...</div>}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -111,6 +112,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Coach />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/gamification"
+          element={
+            <ProtectedRoute>
+              <Gamification />
             </ProtectedRoute>
           }
         />

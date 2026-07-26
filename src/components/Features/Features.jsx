@@ -19,8 +19,7 @@ const features = [
   {
     icon: "🎤",
     title: "Voice Interview",
-    description: "Build confidence through realistic spoken interviews.",
-    comingSoon: true,
+    description: "Practice aloud with speech recognition, transcripts, and spoken questions.",
   },
 ];
 
@@ -44,9 +43,6 @@ function Features() {
                 {feature.icon}
               </span>
 
-              {feature.comingSoon && (
-                <span className="coming-soon">Coming soon</span>
-              )}
             </div>
 
             <h3>{feature.title}</h3>

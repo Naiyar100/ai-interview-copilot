@@ -23,6 +23,7 @@ a {
 
 .hero {
   width: min(1180px, calc(100% - 48px));
+  overflow: clip;
   min-height: calc(100vh - 88px);
   margin: 0 auto;
   display: grid;

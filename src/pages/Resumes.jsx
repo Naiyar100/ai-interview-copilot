@@ -6,6 +6,7 @@ import {
   deleteResume,
   downloadBase64File,
   exportResumeReview,
+  getResumePreview,
   getResumes,
   improveResumeWithAi,
   setActiveResume,
@@ -57,6 +58,7 @@ function Resumes() {
   const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [busyId, setBusyId] = useState("");
+  const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
 
@@ -149,6 +151,19 @@ function Resumes() {
     }
   };
 
+  const handlePreview = async (resume) => {
+    setBusyId(resume.id);
+    setError("");
+    try {
+      const response = await getResumePreview(resume.id);
+      setPreview({ name: resume.originalFileName, source: response.data.preview.url });
+    } catch (requestError) {
+      setError(requestError.message || "Unable to preview resume");
+    } finally {
+      setBusyId("");
+    }
+  };
+
   const handleDelete = async (resume) => {
     if (!window.confirm(`Delete ${resume.originalFileName}? The stored PDF will also be removed.`)) {
       return;
@@ -202,6 +217,18 @@ function Resumes() {
         {error && <p className="resume-error" role="alert">{error}</p>}
         {status && <p className="resume-success" role="status">{status}</p>}
 
+        {preview && (
+          <div className="resume-preview-backdrop" role="presentation">
+            <section className="resume-preview-dialog" role="dialog" aria-modal="true" aria-label={`Preview ${preview.name}`}>
+              <div className="resume-preview-header">
+                <strong>{preview.name}</strong>
+                <button type="button" onClick={() => setPreview(null)}>Close</button>
+              </div>
+              <iframe title={`Preview ${preview.name}`} src={preview.source} />
+            </section>
+          </div>
+        )}
+
         {!loading && resumes.length > 0 && <>
           <section className="ats-controls" aria-labelledby="analysis-title">
             <div><span>Targeted review</span><h2 id="analysis-title">Analyze version {selectedResume?.version || 1}</h2></div>
@@ -248,6 +275,7 @@ function Resumes() {
                 <div className="resume-actions">
                   <label className="compare-check"><input type="checkbox" checked={compareIds.includes(resume.id)} disabled={!compareIds.includes(resume.id) && compareIds.length >= 4} onChange={() => toggleComparison(resume.id)} /> Compare</label>
                   <button type="button" onClick={() => selectResume(resume.id)}>Review</button>
+                  <button type="button" disabled={busyId === resume.id} onClick={() => handlePreview(resume)}>Preview</button>
                   {!resume.isActive && (
                     <button type="button" disabled={busyId === resume.id} onClick={() => handleActivate(resume.id)}>
                       Use for Interviews

@@ -50,6 +50,11 @@
 .resume-error, .resume-success { margin: 18px 0 0; font-size: 14px; font-weight: 700; }
 .resume-error { color: #ff8b8b; }
 .resume-success { color: #7ed5a9; }
+.resume-preview-backdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 24px; background: rgba(5, 7, 18, 0.78); backdrop-filter: blur(6px); }
+.resume-preview-dialog { width: min(980px, 100%); height: min(820px, 90vh); overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 18px; background: #171a2c; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45); }
+.resume-preview-header { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 16px; color: white; }
+.resume-preview-header button { min-height: 38px; padding: 0 14px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: white; background: rgba(255, 255, 255, 0.07); cursor: pointer; }
+.resume-preview-dialog iframe { width: 100%; height: calc(100% - 58px); border: 0; background: white; }
 .resume-empty { margin-top: 24px; padding: 34px; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; color: #9da4bc; text-align: center; background: rgba(255, 255, 255, 0.03); }
 .resume-empty h2 { margin: 0 0 8px; color: white; }
 
@@ -153,6 +158,9 @@ html[data-theme="light"] .resume-analysis div,html[data-theme="light"] .ats-grid
 html[data-theme="light"] .ats-score>div { background: radial-gradient(circle at center,#fff 59%,transparent 60%),conic-gradient(#7558ee var(--score),#dfe3ed 0); }
 html[data-theme="light"] .ats-score strong,html[data-theme="light"] .ats-grid li,html[data-theme="light"] .keyword-group>strong { color: #262a43; }
 html[data-theme="light"] .suggestion-list>div,html[data-theme="light"] .comparison-table,html[data-theme="light"] .ats-disclaimer { border-color: #dfe3ed; }
+html[data-theme="light"] .resume-preview-dialog { border-color: #d8ddef; background: white; }
+html[data-theme="light"] .resume-preview-header { color: #171a2c; }
+html[data-theme="light"] .resume-preview-header button { border-color: #cfd5e7; color: #171a2c; background: #f4f6fc; }
 
 @media (max-width: 640px) {
   .resume-page { padding: 30px 16px; }

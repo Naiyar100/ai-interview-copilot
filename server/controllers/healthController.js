@@ -13,8 +13,11 @@ export const getHealth = (req, res) => {
 
   return sendSuccess(res, healthy ? 200 : 503, healthy ? "Service is healthy" : "Service is degraded", {
     status: healthy ? "ok" : "degraded",
+    version: "1.0.0",
+    environment: process.env.NODE_ENV || "development",
     database: databaseStatus,
     aiProvider: aiProviderStatus,
+    resumeStorage: process.env.STORAGE_PROVIDER || "local",
     uptimeSeconds: Math.floor(process.uptime()),
     memory: {
       rssBytes: memory.rss,

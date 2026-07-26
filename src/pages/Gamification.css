@@ -1,0 +1,48 @@
+.gamification-page {
+  min-height: 100vh;
+  padding: 48px 24px;
+  color: #f7f7ff;
+  background: radial-gradient(circle at 80% 0, rgba(112,79,229,.2), transparent 35%), #121526;
+}
+.game-shell { width: min(1120px, 100%); margin: auto; }
+.game-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.game-topbar a { color: #b5bbd0; font-weight: 700; text-decoration: none; }
+.game-topbar label { display: flex; align-items: center; gap: 9px; color: #a7aec5; font-size: 12px; }
+.game-topbar select { padding: 9px; border: 1px solid rgba(255,255,255,.12); border-radius: 9px; color: inherit; background: #20243b; }
+.game-hero { margin-top: 35px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.game-hero span,.game-heading span { color: #a995ff; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.game-hero h1 { margin: 8px 0; font: 800 clamp(40px,7vw,72px) "Manrope",sans-serif; letter-spacing: -2px; }
+.game-hero p { color: #9da4bc; }
+.level-orbit { width: 130px; height: 130px; display: grid; place-content: center; border: 10px solid rgba(142,114,255,.25); border-top-color: #8e72ff; border-radius: 50%; text-align: center; }
+.level-orbit strong { font-size: 27px; }.level-orbit small { color: #9da4bc; }
+.game-progress { height: 8px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.08); }
+.game-progress i { height: 100%; display: block; border-radius: inherit; background: linear-gradient(90deg,#704fe5,#5487ed); }
+.hero-progress { margin-top: 24px; }.level-caption { margin-top: 8px; display: flex; justify-content: space-between; color: #8f96ad; font-size: 11px; }
+.game-notice { padding: 12px 14px; border-radius: 10px; color: #78d4a8; background: rgba(83,196,139,.1); }.game-notice.error { color: #ff9898; background: rgba(255,100,100,.08); }
+.game-stats { margin: 28px 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.game-stats article,.game-section { border: 1px solid rgba(255,255,255,.09); border-radius: 18px; background: rgba(255,255,255,.045); }
+.game-stats article { padding: 20px; display: grid; gap: 4px; }.game-stats strong { font-size: 27px; }.game-stats span { font-weight: 700; }.game-stats small { color: #8f96ad; }
+.game-section { margin-top: 18px; padding: 22px; }.game-heading h2 { margin: 5px 0 18px; }
+.challenge-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.game-challenge { padding: 17px; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; background: rgba(5,7,18,.25); }
+.game-challenge.complete { border-color: rgba(126,213,169,.35); }.game-challenge>div:first-child,.game-challenge footer { display: flex; justify-content: space-between; gap: 10px; }
+.game-challenge>div>span { color: #a995ff; font-size: 9px; font-weight: 800; text-transform: uppercase; }.game-challenge>div>strong { color: #7ed5a9; font-size: 11px; }
+.game-challenge h3 { margin: 13px 0 5px; }.game-challenge p { min-height: 38px; margin: 0 0 15px; color: #9da4bc; font-size: 12px; line-height: 1.55; }
+.game-challenge footer { margin-top: 12px; align-items: center; }.game-challenge small { color: #9da4bc; }
+.game-challenge button { min-height: 36px; padding: 0 12px; border: 0; border-radius: 9px; color: white; background: linear-gradient(135deg,#704fe5,#5487ed); font-weight: 700; cursor: pointer; }
+.game-challenge button:disabled { opacity: .45; cursor: not-allowed; }
+.badge-gallery { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }.badge-gallery article { padding: 16px; display: grid; gap: 6px; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; }.badge-gallery .locked { opacity: .45; filter: grayscale(1); }
+.badge-gallery b { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 11px; color: #a995ff; background: rgba(112,79,229,.17); }.badge-gallery p,.badge-gallery small { margin: 0; color: #8f96ad; font-size: 10px; line-height: 1.5; }
+.game-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }.leaderboard,.reward-history { margin: 0; padding: 0; list-style: none; }
+.leaderboard li,.reward-history li { padding: 11px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.07); }.leaderboard li.current { border-radius: 10px; background: rgba(112,79,229,.13); }
+.leaderboard li>span,.reward-history li>span { display: grid; gap: 3px; flex: 1; }.leaderboard small,.reward-history small { color: #8f96ad; font-size: 9px; }.leaderboard em { color: #a995ff; font-style: normal; }.reward-history>li>b { color: #7ed5a9; }
+.game-empty,.xp-rules p { color: #8f96ad; }.xp-rules { margin-top: 20px; padding: 18px; border: 1px solid rgba(255,255,255,.09); border-radius: 14px; }.xp-rules summary { cursor: pointer; font-weight: 750; }.xp-rules>div { margin-top: 15px; display: flex; flex-wrap: wrap; gap: 8px; }.xp-rules span { padding: 8px 10px; border-radius: 9px; color: #aeb4cb; background: rgba(255,255,255,.05); font-size: 10px; }.xp-rules span strong { margin-right: 5px; color: #7ed5a9; }
+.game-loading,.game-error { padding: 40px; border-radius: 18px; background: rgba(255,255,255,.05); }.game-error button { padding: 10px 15px; border: 0; border-radius: 9px; color: white; background: #704fe5; }
+html[data-theme="light"] .gamification-page { color: #191c31; background: radial-gradient(circle at 80% 0,#e9e4ff,transparent 35%),#f4f6fb; }
+html[data-theme="light"] .game-stats article,html[data-theme="light"] .game-section,html[data-theme="light"] .xp-rules { border-color: #dfe3ed; background: white; }
+html[data-theme="light"] .game-challenge,html[data-theme="light"] .badge-gallery article { border-color: #e3e6ef; background: #f7f8fc; }
+html[data-theme="light"] .game-topbar select { border-color: #dfe3ed; color: #252940; background: white; }
+html[data-theme="light"] .game-progress { background: #e3e6ef; }
+html[data-theme="light"] .leaderboard li,html[data-theme="light"] .reward-history li { border-color: #e6e8ef; }
+@media (max-width: 800px) { .challenge-grid,.badge-gallery { grid-template-columns: repeat(2,1fr); }.game-columns { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .gamification-page { padding: 25px 15px; }.game-hero { align-items: flex-start; flex-direction: column; }.level-orbit { width: 100px; height: 100px; }.game-stats,.challenge-grid,.badge-gallery { grid-template-columns: 1fr; }.game-topbar { align-items: flex-start; }.game-section { padding: 16px; } }

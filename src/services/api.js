@@ -300,6 +300,9 @@ export const exportResumeReview = (resumeId, format, targetRole = "", jobDescrip
 export const getResume = (resumeId) =>
   apiRequest(`/resumes/${resumeId}`, { requiresAuth: true });
 
+export const getResumePreview = (resumeId) =>
+  apiRequest(`/resumes/${resumeId}/preview`, { requiresAuth: true });
+
 export const setActiveResume = (resumeId) =>
   apiRequest(`/resumes/${resumeId}/active`, {
     method: "PATCH",
@@ -353,3 +356,24 @@ export const uploadResume = (file, onProgress = () => {}) =>
     request.addEventListener("error", () => reject(new Error("Unable to reach the server")));
     request.send(formData);
   });
+
+export const getGamificationProfile = () =>
+  apiRequest("/gamification/profile", { requiresAuth: true });
+
+export const getGamificationChallenges = () =>
+  apiRequest("/gamification/challenges", { requiresAuth: true });
+
+export const claimGamificationChallenge = (challengeKey) =>
+  apiRequest(`/gamification/challenges/${encodeURIComponent(challengeKey)}/claim`, {
+    method: "POST",
+    requiresAuth: true,
+  });
+
+export const getGamificationBadges = () =>
+  apiRequest("/gamification/badges", { requiresAuth: true });
+
+export const getGamificationHistory = () =>
+  apiRequest("/gamification/history", { requiresAuth: true });
+
+export const getGamificationLeaderboard = () =>
+  apiRequest("/gamification/leaderboard", { requiresAuth: true });

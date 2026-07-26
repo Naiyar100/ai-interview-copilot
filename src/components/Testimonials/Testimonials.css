@@ -107,27 +107,11 @@
   font-size: 13px;
 }
 
-.testimonial-stars {
-  margin: 25px 0 17px;
-  color: #f7c94c;
-  font-size: 16px;
-  letter-spacing: 3px;
-  text-shadow: 0 3px 12px rgba(247, 201, 76, 0.16);
-}
-
 .testimonial-card blockquote {
   margin: 0;
   color: #c3c8d8;
   font-size: 15px;
   line-height: 1.75;
-}
-
-.testimonials-disclaimer {
-  margin: 34px 0 0;
-  color: #737b96;
-  font-size: 12px;
-  font-style: italic;
-  text-align: center;
 }
 
 @media (max-width: 900px) {

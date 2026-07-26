@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
+    "seed:demo": "node scripts/seedDemo.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --coverage"
   },
@@ -13,12 +14,20 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "jest": {
     "testEnvironment": "node",
+    "testTimeout": 15000,
     "cacheDirectory": "<rootDir>/.jest-cache",
     "transform": {},
-    "setupFiles": ["<rootDir>/tests/setEnv.js"],
-    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
+    "setupFiles": [
+      "<rootDir>/tests/setEnv.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ],
     "collectCoverageFrom": [
       "controllers/**/*.js",
       "middleware/**/*.js",
@@ -29,6 +38,8 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

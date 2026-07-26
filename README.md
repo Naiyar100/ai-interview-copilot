@@ -1,6 +1,8 @@
-# AI Interview Copilot
+# AI Interview Copilot — v1.0.0
 
-AI Interview Copilot is a React and Express application for private, AI-assisted interview practice. It supports JWT authentication, MongoDB-backed interview history, Gemini-generated questions and evaluations, PDF resume analysis, and browser voice interviews.
+AI Interview Copilot is a production-oriented interview-practice SaaS application. It combines private interview sessions, Gemini-generated questions and evaluations, resume-aware coaching, ATS analysis, analytics, voice practice, and gamification in one responsive React experience.
+
+Phase 15 adds a database-backed gamification center with XP, levels, streaks, daily challenges, weekly missions, badges, reward history, and an internal leaderboard. See [docs/GAMIFICATION.md](docs/GAMIFICATION.md).
 
 The Dashboard 2.0 workspace adds authenticated weekly progress, a 12-week heatmap, daily goals, streaks, XP, badges, topic insights, deterministic coaching recommendations, recent activity, and scheduled practice sessions. See [docs/DASHBOARD.md](docs/DASHBOARD.md).
 
@@ -57,7 +59,7 @@ Open `http://localhost:5173`. The API defaults to `http://localhost:5000`.
 
 ## Environment variables
 
-Backend variables are documented in [server/.env.example](server/.env.example). `CLIENT_URL` accepts a comma-separated allowlist. Production should use a long random `JWT_SECRET`, an HTTPS frontend origin, and `NODE_ENV=production`.
+Backend variables are documented in [server/.env.example](server/.env.example). `CLIENT_URL` accepts a comma-separated allowlist. Production requires `NODE_ENV=production`, a JWT secret of at least 32 characters, Gemini, `STORAGE_PROVIDER=cloudinary`, and all three Cloudinary credentials.
 
 Frontend variables are documented in [.env.example](.env.example). Only variables prefixed with `VITE_` are included in the browser bundle; never place secrets there.
 
@@ -95,8 +97,53 @@ See [docs/TESTING.md](docs/TESTING.md) for the test matrix and manual checks.
 - Consistent JSON errors without internal stack/provider details
 - Graceful shutdown and bounded MongoDB connection pool
 
-Health monitoring is available at `GET /api/health`. See [docs/API.md](docs/API.md) for endpoint details.
+Health monitoring is available at `GET /health` and the compatible `GET /api/health`. See [docs/API.md](docs/API.md) for endpoint details.
 
-## Production build
+## Production deployment
 
-`npm run build` creates the optimized frontend in `dist/`, including route-level code splitting. Deployment is intentionally outside Phase 10.
+The repository includes [vercel.json](vercel.json) for the React SPA and [render.yaml](render.yaml) for the Express service. Production uses MongoDB Atlas and authenticated Cloudinary raw assets for private PDFs. Follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for account setup, environment mapping, CORS, health checks, demo seeding, verification, and rollback.
+
+`npm run build` creates an optimized frontend in `dist/` with route-level code splitting and fingerprinted assets. The public health endpoint is `GET /health`; `GET /api/health` remains compatible.
+
+## Demo account
+
+The idempotent seed creates three evaluated interviews, analytics/activity data, XP history, and a private resume with an ATS review:
+
+```powershell
+cd server
+$env:DEMO_PASSWORD="choose-a-strong-demo-password"
+npm run seed:demo
+```
+
+Configure `DEMO_EMAIL` and `DEMO_NAME` if desired, then sign in through the normal login page. Never commit or publish the demo password.
+
+## Screenshots and recruiter demo
+
+Capture public screenshots from the connected, seeded production environment so dashboards and storage-backed views are accurate and contain no developer credentials. Recommended views are `/dashboard`, `/interview/history`, `/resumes`, `/analytics`, `/coach`, and `/gamification`.
+
+## Production checklist
+
+- Verify registration, login, refresh, logout, and expired-token handling.
+- Upload, preview, activate, compare, and delete a PDF.
+- Create, generate, answer, complete, evaluate, and delete an interview.
+- Confirm dashboard, analytics, activities, and rewards update.
+- Verify coach streaming and chat ownership.
+- Check light/dark themes, keyboard focus, reduced motion, and mobile portrait/landscape.
+- Confirm cross-user resources return 403 and unapproved origins fail CORS.
+- Confirm host logs and browser responses contain no secrets, raw prompts, or resume text.
+
+## Roadmap
+
+- HttpOnly refresh-token rotation
+- Object-storage malware scanning
+- Provider-independent AI and storage adapters
+- Organization workspaces and recruiter-managed practice plans
+- End-to-end browser automation in CI
+
+## Contributing
+
+Create a focused branch, preserve ES Modules and ownership rules, add tests, and run frontend tests/lint/build plus backend tests. Never commit `.env`, uploaded resumes, test databases, or credentials.
+
+## License
+
+Distributed under the ISC License. See [LICENSE](LICENSE).

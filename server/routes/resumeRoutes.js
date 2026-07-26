@@ -9,6 +9,7 @@ import {
   getResumes,
   setActiveResume,
   improveResume,
+  previewResume,
   uploadResume,
 } from "../controllers/resumeController.js";
 import protect from "../middleware/authMiddleware.js";
@@ -26,6 +27,7 @@ router.route("/analysis").get(getResumeAnalysis).post(getResumeAnalysis);
 router.post("/compare", compareResumes);
 router.post("/improve", generationRateLimit, improveResume);
 router.post("/export", exportResumeAnalysis);
+router.get("/:id/preview", objectIdValidation, previewResume);
 router.patch("/:id/active", objectIdValidation, setActiveResume);
 router.route("/:id").get(objectIdValidation, getResumeById).delete(objectIdValidation, deleteResume);
 

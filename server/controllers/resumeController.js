@@ -6,7 +6,9 @@ import { analyzeResume } from "../services/resume/analyzer.js";
 import { parseResumePdf } from "../services/resume/parser.js";
 import {
   calculateResumeChecksum,
+  createResumePreview,
   deleteStoredResume,
+  storeResume,
 } from "../services/resume/storage.js";
 import { sendSuccess } from "../utils/apiResponse.js";
 import { recordActivitySafe } from "../services/dashboard/activityService.js";
@@ -33,6 +35,7 @@ const formatResume = (resume, analysis = null) => ({
   uploadDate: resume.uploadDate,
   createdAt: resume.createdAt,
   updatedAt: resume.updatedAt,
+  canPreview: true,
   latestAnalysis: analysis ? formatAnalysis(analysis) : null,
 });
 
@@ -76,6 +79,7 @@ export const uploadResume = async (req, res, next) => {
   if (!req.file) return next(createHttpError(400, "Please select a PDF resume"));
 
   let createdResume;
+  let storedAsset;
   try {
     const checksum = await calculateResumeChecksum(req.file.path);
     const duplicate = await Resume.findOne({ user: req.user._id, checksum });
@@ -87,6 +91,7 @@ export const uploadResume = async (req, res, next) => {
       );
       duplicate.isActive = true;
       await duplicate.save();
+      req.log?.info({ resumeId: duplicate._id.toString(), duplicate: true }, "Resume upload deduplicated");
       const analysis = await ResumeAnalysis.findOne({
         user: req.user._id,
         resume: duplicate._id,
@@ -100,10 +105,12 @@ export const uploadResume = async (req, res, next) => {
     const summary = analyzeResume(extractedText);
     await ensureResumeVersions(req.user._id);
     const latestVersion = await Resume.findOne({ user: req.user._id, version: { $exists: true } }).sort({ version: -1 }).select("version").lean();
+    storedAsset = await storeResume(req.file.path, req.file.filename);
     createdResume = await Resume.create({
       user: req.user._id,
       originalFileName: path.basename(req.file.originalname),
-      storedFileName: req.file.filename,
+      storedFileName: storedAsset.storageKey,
+      storageProvider: storedAsset.storageProvider,
       fileSize: req.file.size,
       mimeType: req.file.mimetype,
       checksum,
@@ -121,6 +128,11 @@ export const uploadResume = async (req, res, next) => {
     createdResume.isActive = true;
     await createdResume.save();
     const { analysis } = await createBaselineResumeAnalysis(createdResume);
+    req.log?.info({
+      resumeId: createdResume._id.toString(),
+      bytes: createdResume.fileSize,
+      storageProvider: createdResume.storageProvider,
+    }, "Resume uploaded");
     invalidateAnalyticsCache(req.user._id.toString());
     const isFirstResume = (await Resume.countDocuments({ user: req.user._id })) === 1;
     void recordActivitySafe({
@@ -138,7 +150,10 @@ export const uploadResume = async (req, res, next) => {
       await ResumeAnalysis.deleteMany({ resume: createdResume._id }).catch(() => {});
       await Resume.deleteOne({ _id: createdResume._id }).catch(() => {});
     }
-    await deleteStoredResume(req.file.filename).catch(() => {});
+    if (storedAsset) {
+      await deleteStoredResume(storedAsset.storageKey, storedAsset.storageProvider).catch(() => {});
+    }
+    await deleteStoredResume(req.file.filename, "local").catch(() => {});
     if (error.code === 11000) {
       return next(createHttpError(409, "This resume has already been uploaded"));
     }
@@ -180,13 +195,24 @@ export const setActiveResume = async (req, res) => {
   });
 };
 
+export const previewResume = async (req, res) => {
+  const resume = await getOwnedResume(req.params.id, req.user._id, true);
+  return sendSuccess(res, 200, "Secure resume preview created successfully", {
+    preview: await createResumePreview(resume.storedFileName, resume.storageProvider),
+  });
+};
+
 export const deleteResume = async (req, res) => {
   const resume = await getOwnedResume(req.params.id, req.user._id, true);
   const wasActive = resume.isActive;
 
-  await deleteStoredResume(resume.storedFileName);
+  await deleteStoredResume(resume.storedFileName, resume.storageProvider);
   await ResumeAnalysis.deleteMany({ user: req.user._id, resume: resume._id });
   await resume.deleteOne();
+  req.log?.info({
+    resumeId: resume._id.toString(),
+    storageProvider: resume.storageProvider,
+  }, "Resume deleted");
   if (wasActive) await activateMostRecentResume(req.user._id);
   invalidateAnalyticsCache(req.user._id.toString());
 

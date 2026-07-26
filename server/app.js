@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import compression from "compression";
 import { rateLimit } from "express-rate-limit";
 import pinoHttp from "pino-http";
 import authRoutes from "./routes/authRoutes.js";
@@ -12,6 +13,7 @@ import scheduledInterviewRoutes from "./routes/scheduledInterviewRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import coachRoutes from "./routes/coachRoutes.js";
+import gamificationRoutes from "./routes/gamificationRoutes.js";
 import logger from "./config/logger.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorMiddleware.js";
 import { preventNoSqlInjection, requireJsonContentType } from "./middleware/securityMiddleware.js";
@@ -54,6 +56,7 @@ app.use(
     },
   }),
 );
+app.use(compression());
 app.use(express.json({ limit: "100kb", strict: true }));
 app.use(requireJsonContentType);
 app.use(preventNoSqlInjection);
@@ -83,6 +86,7 @@ const authLimiter = rateLimit({
 });
 
 app.use("/api", apiLimiter);
+app.use("/health", healthRoutes);
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/dashboard", dashboardRoutes);
@@ -93,6 +97,7 @@ app.use("/api/resume", resumeRoutes);
 app.use("/api/scheduled-interviews", scheduledInterviewRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/coach", coachRoutes);
+app.use("/api/gamification", gamificationRoutes);
 app.get("/", (req, res) => res.type("text/plain").send("AI Interview Copilot API is running"));
 
 app.use(notFoundHandler);

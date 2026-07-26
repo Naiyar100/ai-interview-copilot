@@ -12,6 +12,7 @@ const protect = async (req, res, next) => {
   const [scheme, token, extra] = authorization?.trim().split(/\s+/) || [];
 
   if (scheme !== "Bearer" || !token || extra || !process.env.JWT_SECRET) {
+    req.log?.warn({ path: req.originalUrl }, "Authentication rejected: missing or malformed bearer token");
     return next(createUnauthorizedError());
   }
 
@@ -22,12 +23,14 @@ const protect = async (req, res, next) => {
     );
 
     if (!user) {
+      req.log?.warn({ path: req.originalUrl }, "Authentication rejected: user no longer exists");
       return next(createUnauthorizedError());
     }
 
     req.user = user;
     return next();
-  } catch {
+  } catch (error) {
+    req.log?.warn({ err: error, path: req.originalUrl }, "Authentication rejected: invalid or expired token");
     return next(createUnauthorizedError());
   }
 };

@@ -1,5 +1,9 @@
 # API reference
 
+## Gamification
+
+Protected routes: `GET /api/gamification/profile`, `GET /api/gamification/challenges`, `POST /api/gamification/challenges/:challengeKey/claim`, `GET /api/gamification/badges`, `GET /api/gamification/history`, and `GET /api/gamification/leaderboard`.
+
 Phase 12 analytics routes and schemas are documented in [ANALYTICS.md](ANALYTICS.md). All `/api/analytics/*` routes require a Bearer JWT.
 
 Phase 13 Career Coach routes, SSE events, and payloads are documented in [COACH.md](COACH.md). All `/api/coach/*` routes require a Bearer JWT and enforce conversation ownership.
@@ -12,6 +16,7 @@ All responses use `{ "success": boolean, "message": string, "data": object }` on
 
 ## System
 
+- `GET /health` (outside the `/api` base) and `GET /api/health` return status, version, environment, MongoDB, Gemini configuration, storage provider, uptime, memory, and timestamp.
 - `GET /health` — server status, MongoDB state, Gemini configuration state, uptime, memory usage, and timestamp.
 
 ## Authentication and users
@@ -62,6 +67,7 @@ Every interview query is scoped to the JWT user. Direct access to an existing do
 - `POST /resumes` — multipart form field `resume`; PDF only
 - `GET /resumes`
 - `GET /resumes/:id`
+- `GET /resumes/:id/preview` — owner-only local data URL or five-minute Cloudinary signed preview
 - `PATCH /resumes/:id/active`
 - `DELETE /resumes/:id`
 

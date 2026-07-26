@@ -23,6 +23,11 @@ const resumeSchema = new mongoose.Schema(
     },
     originalFileName: { type: String, required: true, trim: true },
     storedFileName: { type: String, required: true, select: false },
+    storageProvider: {
+      type: String,
+      enum: ["local", "cloudinary"],
+      default: "local",
+    },
     fileSize: { type: Number, required: true, min: 1 },
     mimeType: { type: String, required: true, enum: ["application/pdf"] },
     checksum: { type: String, required: true, select: false },

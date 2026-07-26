@@ -50,6 +50,9 @@ describe("Phase 14 ATS Resume Reviewer", () => {
     const second = await request(app).post("/api/resume/upload").set(auth(current.token)).attach("resume", secondPdf, { filename: "resume-two.pdf", contentType: "application/pdf" });
     expect(first.status).toBe(201); expect(second.status).toBe(201);
     expect(first.body.data.resume.version).toBe(1); expect(second.body.data.resume.version).toBe(2); expect(second.body.data.resume.isActive).toBe(true);
+    const preview = await request(app).get(`/api/resumes/${second.body.data.resume.id}/preview`).set(auth(current.token));
+    expect(preview.status).toBe(200);
+    expect(preview.body.data.preview.url).toMatch(/^data:application\/pdf;base64,/);
     const history = await request(app).get("/api/resume/history").set(auth(current.token));
     expect(history.body.data.resumes.map((item) => item.version)).toEqual([2, 1]);
     expect(history.body.data.resumes.every((item) => item.latestAnalysis?.scores?.ats >= 0)).toBe(true);
