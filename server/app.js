@@ -21,11 +21,29 @@ import { preventNoSqlInjection, requireJsonContentType } from "./middleware/secu
 
 const app = express();
 
-const allowedOrigins = () =>
-  (process.env.CLIENT_URL || "")
+const normalizeOrigin = (value) => {
+  const candidate = value.trim().replace(/^(['"])(.*)\1$/, "$2");
+  if (!candidate) return "";
+
+  try {
+    return new URL(candidate).origin;
+  } catch {
+    return candidate.replace(/\/+$/, "");
+  }
+};
+
+const allowedOrigins = () => {
+  const configuredOrigins = (process.env.CLIENT_URL || "")
     .split(",")
-    .map((origin) => origin.trim())
+    .map(normalizeOrigin)
     .filter(Boolean);
+
+  if (process.env.NODE_ENV !== "production") {
+    configuredOrigins.push("http://localhost:5173");
+  }
+
+  return new Set(configuredOrigins);
+};
 
 app.disable("x-powered-by");
 if (process.env.TRUST_PROXY) app.set("trust proxy", process.env.TRUST_PROXY);
@@ -42,7 +60,7 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins().includes(origin)) return callback(null, true);
+      if (!origin || allowedOrigins().has(normalizeOrigin(origin))) return callback(null, true);
       const error = new Error("Origin is not allowed by CORS");
       error.statusCode = 403;
       return callback(error);
@@ -50,6 +68,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     maxAge: 86400,
+    optionsSuccessStatus: 204,
   }),
 );
 app.use(

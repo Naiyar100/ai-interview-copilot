@@ -4,6 +4,8 @@ import app from "../app.js";
 import { auth, registerTestUser } from "./helpers.js";
 
 describe("authentication, protection, validation and health", () => {
+  const deployedOrigin = "https://ai-interview-copilot-delta-bice.vercel.app";
+
   test("registers, logs in, and returns only safe user fields", async () => {
     const { credentials, response, token } = await registerTestUser();
     expect(response.status).toBe(201);
@@ -40,6 +42,38 @@ describe("authentication, protection, validation and health", () => {
     const missing = await request(app).get("/api/does-not-exist");
     expect(missing.status).toBe(404);
     expect(missing.body.success).toBe(false);
+  });
+
+  test("allows configured Vercel and localhost origins, handles preflight, and blocks unknown origins", async () => {
+    const previousClientUrl = process.env.CLIENT_URL;
+    process.env.CLIENT_URL = `${deployedOrigin}/, http://localhost:5173`;
+
+    try {
+      const preflight = await request(app)
+        .options("/api/auth/register")
+        .set("Origin", deployedOrigin)
+        .set("Access-Control-Request-Method", "POST")
+        .set("Access-Control-Request-Headers", "content-type");
+      expect(preflight.status).toBe(204);
+      expect(preflight.headers["access-control-allow-origin"]).toBe(deployedOrigin);
+      expect(preflight.headers["access-control-allow-methods"]).toContain("POST");
+
+      const local = await request(app)
+        .post("/api/auth/register")
+        .set("Origin", "http://localhost:5173")
+        .send({ name: "", email: "bad", password: "short" });
+      expect(local.status).toBe(400);
+      expect(local.headers["access-control-allow-origin"]).toBe("http://localhost:5173");
+
+      const blocked = await request(app)
+        .options("/api/auth/register")
+        .set("Origin", "https://unknown.example")
+        .set("Access-Control-Request-Method", "POST");
+      expect(blocked.status).toBe(403);
+      expect(blocked.headers["access-control-allow-origin"]).toBeUndefined();
+    } finally {
+      process.env.CLIENT_URL = previousClientUrl;
+    }
   });
 
   test("updates profiles and calculates an owned dashboard summary", async () => {
