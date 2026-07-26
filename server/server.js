@@ -1,7 +1,10 @@
+import dns from "node:dns";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import validateEnvironment from "./config/env.js";
 import logger from "./config/logger.js";
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 dotenv.config();
 const { default: app } = await import("./app.js");
