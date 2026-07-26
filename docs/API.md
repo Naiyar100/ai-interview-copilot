@@ -16,8 +16,8 @@ All responses use `{ "success": boolean, "message": string, "data": object }` on
 
 ## System
 
-- `GET /health` (outside the `/api` base) and `GET /api/health` return status, version, environment, MongoDB, Gemini configuration, storage provider, uptime, memory, and timestamp.
-- `GET /health` — server status, MongoDB state, Gemini configuration state, uptime, memory usage, and timestamp.
+- `GET /health` (outside the `/api` base) is the canonical unauthenticated infrastructure probe. It returns status, MongoDB state, version, and uptime without passing through CORS or API rate limiting.
+- `GET /api/health` is the backwards-compatible alias.
 
 ## Authentication and users
 

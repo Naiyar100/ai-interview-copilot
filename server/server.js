@@ -39,7 +39,10 @@ const startServer = async () => {
     await connectDB();
 
     server = app.listen(PORT, () => {
-      logger.info({ port: Number(PORT) }, "Server started");
+      logger.info({
+        port: Number(PORT),
+        publicRoutes: ["GET /", "GET /health", "GET /api/health"],
+      }, "Server started");
     });
     process.once("SIGTERM", () => shutdown("SIGTERM"));
     process.once("SIGINT", () => shutdown("SIGINT"));

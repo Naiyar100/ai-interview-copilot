@@ -37,7 +37,7 @@ AI calls are mocked in automated tests; they do not spend Gemini quota. Browser 
 ## Manual smoke test
 
 1. Start MongoDB, backend, and frontend.
-2. Open `GET http://localhost:5000/api/health` and confirm `status: ok` and `database: connected`.
+2. Open `GET http://localhost:5000/health` and confirm `status: ok` and `database: connected`. Verify `/api/health` as the compatibility alias.
 3. Register, log out, and log in again.
 4. Confirm an unauthenticated request to `/api/interviews` returns `401`.
 5. Create two users and confirm neither can fetch the other's interview or resume IDs.

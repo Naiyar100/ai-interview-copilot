@@ -15,6 +15,7 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 import coachRoutes from "./routes/coachRoutes.js";
 import gamificationRoutes from "./routes/gamificationRoutes.js";
 import logger from "./config/logger.js";
+import { getHealth } from "./controllers/healthController.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorMiddleware.js";
 import { preventNoSqlInjection, requireJsonContentType } from "./middleware/securityMiddleware.js";
 
@@ -28,6 +29,15 @@ const allowedOrigins = () =>
 
 app.disable("x-powered-by");
 if (process.env.TRUST_PROXY) app.set("trust proxy", process.env.TRUST_PROXY);
+
+// Render probes and public uptime monitors must not depend on application
+// middleware, authentication, CORS allowlists, or API rate limits.
+app.get("/", (req, res) => {
+  void req;
+  return res.status(200).type("text/plain").send("AI Interview Copilot API is running");
+});
+app.get("/health", getHealth);
+
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 app.use(
   cors({
@@ -98,7 +108,6 @@ app.use("/api/scheduled-interviews", scheduledInterviewRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/coach", coachRoutes);
 app.use("/api/gamification", gamificationRoutes);
-app.get("/", (req, res) => res.type("text/plain").send("AI Interview Copilot API is running"));
 
 app.use(notFoundHandler);
 app.use(errorHandler);

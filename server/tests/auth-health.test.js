@@ -33,8 +33,8 @@ describe("authentication, protection, validation and health", () => {
     const health = await request(app).get("/api/health").set("Origin", "http://localhost:5173");
     expect(health.status).toBe(200);
     expect(health.headers["x-content-type-options"]).toBe("nosniff");
-    expect(health.body.data).toEqual(expect.objectContaining({ status: "ok", version: "1.0.0", database: "connected", aiProvider: "configured" }));
-    expect((await request(app).get("/health")).status).toBe(200);
+    expect(health.body).toEqual(expect.objectContaining({ status: "ok", version: "1.0.0", database: "connected" }));
+    expect((await request(app).get("/health").set("Origin", "https://evil.example")).status).toBe(200);
 
     expect((await request(app).get("/api/health").set("Origin", "https://evil.example")).status).toBe(403);
     const missing = await request(app).get("/api/does-not-exist");
