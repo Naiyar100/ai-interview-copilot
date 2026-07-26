@@ -1,4 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+const configuredApiUrl = import.meta.env.VITE_API_URL?.replace(/\/+$/, "");
+const API_URL = configuredApiUrl
+  ? `${configuredApiUrl}${configuredApiUrl.endsWith("/api") ? "" : "/api"}`
+  : "";
 const TOKEN_KEY = "authToken";
 
 if (!API_URL) {
