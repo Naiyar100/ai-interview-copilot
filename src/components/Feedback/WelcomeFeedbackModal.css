@@ -37,6 +37,16 @@ html[data-theme="dark"] .welcome-kicker { color: #a895ff; }
 }
 
 .welcome-copy { display: grid; gap: 12px; }
+.creator-name {
+  display: inline-block;
+  color: transparent;
+  background: linear-gradient(135deg, #704fe5, #5487ed);
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-size: 1.22em;
+  font-weight: 800;
+  line-height: 1.2;
+}
 .welcome-actions,
 .feedback-actions {
   display: flex;

@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import "./Hero.css";
 
 function Hero() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const firstLine = "PRACTICE SMARTER.";
   const secondLine = "INTERVIEW BETTER.";
   return (
@@ -41,7 +45,11 @@ function Hero() {
           instant feedback, and walk into your next interview with confidence.
         </p>
 
-        <button className="hero-button" type="button">
+        <button
+          className="hero-button"
+          type="button"
+          onClick={() => navigate(isAuthenticated ? "/dashboard" : "/login")}
+        >
           Start Interview
           <span aria-hidden="true">→</span>
         </button>

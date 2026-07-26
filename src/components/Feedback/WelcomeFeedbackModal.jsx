@@ -49,7 +49,10 @@ function WelcomeFeedbackModal() {
           <p className="welcome-kicker">A note from the creator</p>
           <h2 id="welcome-feedback-title">Welcome to AI Interview Copilot 👋</h2>
           <div id="welcome-feedback-description" className="welcome-copy">
-            <p>Hey! I&apos;m Naiyar Alam, the creator of AI Interview Copilot.</p>
+            <p>
+              Hey! I&apos;m <strong className="creator-name">Naiyar Alam</strong>,
+              the creator of AI Interview Copilot.
+            </p>
             <p>
               I&apos;d really appreciate it if you could explore the application
               and test its features. If you notice anything that is broken,
