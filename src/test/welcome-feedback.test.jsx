@@ -93,6 +93,15 @@ describe("welcome and feedback modal", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  test("shows the updated popup when only the previous version was dismissed", async () => {
+    localStorage.setItem("ai-interview-copilot-welcome-v1-dismissed", "true");
+    const user = userEvent.setup();
+    render(<AuthFlow />);
+
+    await login(user);
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+  });
+
   test("validates and successfully submits feedback", async () => {
     const user = userEvent.setup();
     apiMocks.submitFeedback.mockResolvedValue({ success: true });

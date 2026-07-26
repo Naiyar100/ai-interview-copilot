@@ -6,7 +6,7 @@ import FeedbackForm from "./FeedbackForm";
 import "./WelcomeFeedbackModal.css";
 
 export const WELCOME_DISMISSED_KEY =
-  "ai-interview-copilot-welcome-v1-dismissed";
+  "ai-interview-copilot-welcome-v2-dismissed";
 
 const publicRoutes = new Set(["/", "/login", "/signup"]);
 
