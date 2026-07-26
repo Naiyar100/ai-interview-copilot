@@ -5,18 +5,15 @@ import Feedback from "../models/Feedback.js";
 import { auth, registerTestUser } from "./helpers.js";
 
 const validFeedback = {
-  rating: 5,
-  liked: "The dashboard and interview flow are clear.",
-  improvements: "Add more explanations to the reports.",
-  foundBug: true,
-  bugDescription: "The action briefly appeared disabled.",
-  pageOrFeature: "Interview Results",
+  name: "Naiyar Alam",
+  email: "naiyar@example.com",
+  feedback: "The interview flow is clear and helpful.",
 };
 
 describe("feedback", () => {
-  test("stores authenticated feedback using trusted user details", async () => {
+  test("stores authenticated feedback with the JWT user association", async () => {
     const current = await registerTestUser({
-      name: "Feedback Owner",
+      name: "Account Owner",
       email: "owner@example.com",
     });
 
@@ -26,8 +23,6 @@ describe("feedback", () => {
       .send({
         ...validFeedback,
         user: "000000000000000000000000",
-        userName: "Imposter",
-        userEmail: "imposter@example.com",
       });
 
     expect(response.status).toBe(201);
@@ -40,34 +35,32 @@ describe("feedback", () => {
 
     const saved = await Feedback.findById(response.body.data.feedback.id);
     expect(saved.user.toString()).toBe(current.user.id.toString());
-    expect(saved.userName).toBe("Feedback Owner");
-    expect(saved.userEmail).toBe("owner@example.com");
-    expect(saved).not.toHaveProperty("password");
+    expect(saved.name).toBe(validFeedback.name);
+    expect(saved.email).toBe(validFeedback.email);
+    expect(saved.feedback).toBe(validFeedback.feedback);
   });
 
-  test("rejects unauthenticated and invalid feedback", async () => {
-    expect(
-      (await request(app).post("/api/feedback").send(validFeedback)).status,
-    ).toBe(401);
+  test("rejects unauthenticated submissions", async () => {
+    const response = await request(app).post("/api/feedback").send(validFeedback);
+    expect(response.status).toBe(401);
+  });
 
+  test.each([
+    ["empty name", { ...validFeedback, name: "" }],
+    ["invalid email", { ...validFeedback, email: "not-an-email" }],
+    ["empty feedback", { ...validFeedback, feedback: "" }],
+    ["oversized feedback", { ...validFeedback, feedback: "x".repeat(2001) }],
+  ])("rejects %s", async (label, payload) => {
+    void label;
     const current = await registerTestUser();
-    const invalidPayloads = [
-      { ...validFeedback, rating: 0 },
-      { ...validFeedback, liked: "" },
-      { ...validFeedback, improvements: "" },
-      { ...validFeedback, liked: "x".repeat(1001) },
-    ];
-
-    for (const payload of invalidPayloads) {
-      const response = await request(app)
-        .post("/api/feedback")
-        .set(auth(current.token))
-        .send(payload);
-      expect(response.status).toBe(400);
-    }
+    const response = await request(app)
+      .post("/api/feedback")
+      .set(auth(current.token))
+      .send(payload);
+    expect(response.status).toBe(400);
   });
 
-  test("keeps feedback private to the submission endpoint", async () => {
+  test("does not expose feedback listing or detail routes", async () => {
     const owner = await registerTestUser();
     const other = await registerTestUser();
     const created = await request(app)

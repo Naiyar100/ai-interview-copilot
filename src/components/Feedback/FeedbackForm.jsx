@@ -1,25 +1,22 @@
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { submitFeedback } from "../../services/api";
-import RatingInput from "./RatingInput";
 
 const LIMITS = {
-  liked: 1000,
-  improvements: 1000,
-  bugDescription: 1000,
-  pageOrFeature: 120,
+  name: 100,
+  email: 254,
+  feedback: 2000,
 };
 
-const initialValues = {
-  rating: 0,
-  liked: "",
-  improvements: "",
-  foundBug: false,
-  bugDescription: "",
-  pageOrFeature: "",
-};
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function FeedbackForm({ onCancel, onSuccess }) {
-  const [values, setValues] = useState(initialValues);
+  const { user } = useAuth();
+  const [values, setValues] = useState({
+    name: user?.name || "",
+    email: user?.email || "",
+    feedback: "",
+  });
   const [errors, setErrors] = useState({});
   const [requestError, setRequestError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -31,11 +28,11 @@ function FeedbackForm({ onCancel, onSuccess }) {
 
   const validate = () => {
     const nextErrors = {};
-    if (!values.rating) nextErrors.rating = "Choose a rating from 1 to 5.";
-    if (!values.liked.trim()) nextErrors.liked = "Tell us what you liked.";
-    if (!values.improvements.trim()) {
-      nextErrors.improvements = "Tell us what could be improved.";
+    if (!values.name.trim()) nextErrors.name = "Enter your name.";
+    if (!EMAIL_PATTERN.test(values.email.trim())) {
+      nextErrors.email = "Enter a valid email address.";
     }
+    if (!values.feedback.trim()) nextErrors.feedback = "Enter your feedback.";
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
@@ -48,11 +45,9 @@ function FeedbackForm({ onCancel, onSuccess }) {
     setSubmitting(true);
     try {
       await submitFeedback({
-        ...values,
-        liked: values.liked.trim(),
-        improvements: values.improvements.trim(),
-        bugDescription: values.bugDescription.trim(),
-        pageOrFeature: values.pageOrFeature.trim(),
+        name: values.name.trim(),
+        email: values.email.trim(),
+        feedback: values.feedback.trim(),
       });
       onSuccess();
     } catch {
@@ -64,80 +59,76 @@ function FeedbackForm({ onCancel, onSuccess }) {
     }
   };
 
-  const textField = ({ field, label, required = false, rows = 3 }) => (
-    <label className="feedback-field" htmlFor={`feedback-${field}`}>
-      <span>{label}{required && <b aria-hidden="true"> *</b>}</span>
-      <textarea
-        id={`feedback-${field}`}
-        rows={rows}
-        maxLength={LIMITS[field]}
-        value={values[field]}
-        aria-invalid={Boolean(errors[field])}
-        aria-describedby={errors[field] ? `${field}-error` : `${field}-limit`}
-        onChange={(event) => update(field, event.target.value)}
-      />
-      <small id={`${field}-limit`}>{values[field].length}/{LIMITS[field]}</small>
-      {errors[field] && (
-        <p className="feedback-field-error" id={`${field}-error`}>{errors[field]}</p>
-      )}
-    </label>
-  );
-
   return (
     <form className="feedback-form" onSubmit={handleSubmit} noValidate>
-      <RatingInput
-        value={values.rating}
-        onChange={(rating) => update("rating", rating)}
-        error={errors.rating}
-      />
-      {textField({ field: "liked", label: "What did you like?", required: true })}
-      {textField({
-        field: "improvements",
-        label: "What should be improved?",
-        required: true,
-      })}
-
-      <fieldset className="feedback-bug">
-        <legend>Did you find a bug?</legend>
-        <label>
-          <input
-            type="radio"
-            name="foundBug"
-            checked={!values.foundBug}
-            onChange={() => update("foundBug", false)}
-          />
-          No
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="foundBug"
-            checked={values.foundBug}
-            onChange={() => update("foundBug", true)}
-          />
-          Yes
-        </label>
-      </fieldset>
-
-      {values.foundBug &&
-        textField({ field: "bugDescription", label: "Bug description (optional)" })}
-
-      <label className="feedback-field" htmlFor="feedback-pageOrFeature">
-        <span>Page or feature (optional)</span>
+      <label className="feedback-field" htmlFor="feedback-name">
+        <span>Name <b aria-hidden="true">*</b></span>
         <input
-          id="feedback-pageOrFeature"
+          id="feedback-name"
           type="text"
-          maxLength={LIMITS.pageOrFeature}
-          value={values.pageOrFeature}
-          onChange={(event) => update("pageOrFeature", event.target.value)}
+          autoComplete="name"
+          maxLength={LIMITS.name}
+          value={values.name}
+          aria-invalid={Boolean(errors.name)}
+          aria-describedby={errors.name ? "feedback-name-error" : undefined}
+          onChange={(event) => update("name", event.target.value)}
         />
-        <small>{values.pageOrFeature.length}/{LIMITS.pageOrFeature}</small>
+        {errors.name && (
+          <p className="feedback-field-error" id="feedback-name-error">{errors.name}</p>
+        )}
       </label>
 
-      {requestError && <p className="feedback-request-error" role="alert">{requestError}</p>}
+      <label className="feedback-field" htmlFor="feedback-email">
+        <span>Email <b aria-hidden="true">*</b></span>
+        <input
+          id="feedback-email"
+          type="email"
+          autoComplete="email"
+          maxLength={LIMITS.email}
+          value={values.email}
+          aria-invalid={Boolean(errors.email)}
+          aria-describedby={errors.email ? "feedback-email-error" : undefined}
+          onChange={(event) => update("email", event.target.value)}
+        />
+        {errors.email && (
+          <p className="feedback-field-error" id="feedback-email-error">{errors.email}</p>
+        )}
+      </label>
+
+      <label className="feedback-field" htmlFor="feedback-message">
+        <span>Feedback <b aria-hidden="true">*</b></span>
+        <textarea
+          id="feedback-message"
+          rows="6"
+          maxLength={LIMITS.feedback}
+          value={values.feedback}
+          aria-invalid={Boolean(errors.feedback)}
+          aria-describedby={
+            errors.feedback ? "feedback-message-error" : "feedback-message-limit"
+          }
+          onChange={(event) => update("feedback", event.target.value)}
+        />
+        <small id="feedback-message-limit">
+          {values.feedback.length}/{LIMITS.feedback}
+        </small>
+        {errors.feedback && (
+          <p className="feedback-field-error" id="feedback-message-error">
+            {errors.feedback}
+          </p>
+        )}
+      </label>
+
+      {requestError && (
+        <p className="feedback-request-error" role="alert">{requestError}</p>
+      )}
 
       <div className="feedback-actions">
-        <button type="button" className="feedback-secondary" onClick={onCancel} disabled={submitting}>
+        <button
+          type="button"
+          className="feedback-secondary"
+          onClick={onCancel}
+          disabled={submitting}
+        >
           Cancel
         </button>
         <button type="submit" className="feedback-primary" disabled={submitting}>

@@ -97,29 +97,18 @@ const cleanFeedbackText = (value) =>
     : value;
 
 export const feedbackValidation = [
-  body("rating")
-    .isInt({ min: 1, max: 5 })
-    .withMessage("must be a whole number from 1 to 5")
-    .toInt(),
-  body("liked")
+  body("name")
     .isString()
     .customSanitizer(cleanFeedbackText)
-    .isLength({ min: 1, max: 1000 }),
-  body("improvements")
+    .isLength({ min: 1, max: 100 }),
+  body("email")
+    .isEmail()
+    .normalizeEmail()
+    .isLength({ max: 254 }),
+  body("feedback")
     .isString()
     .customSanitizer(cleanFeedbackText)
-    .isLength({ min: 1, max: 1000 }),
-  body("foundBug").isBoolean({ strict: true }).toBoolean(),
-  body("bugDescription")
-    .optional()
-    .isString()
-    .customSanitizer(cleanFeedbackText)
-    .isLength({ max: 1000 }),
-  body("pageOrFeature")
-    .optional()
-    .isString()
-    .customSanitizer(cleanFeedbackText)
-    .isLength({ max: 120 }),
+    .isLength({ min: 1, max: 2000 }),
   validateRequest,
 ];
 

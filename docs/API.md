@@ -35,20 +35,22 @@ Request body:
 
 ```json
 {
-  "rating": 5,
-  "liked": "The dashboard and AI interview flow",
-  "improvements": "The mobile spacing could be improved",
-  "foundBug": true,
-  "bugDescription": "A button briefly froze",
-  "pageOrFeature": "Interview Results"
+  "name": "Naiyar Alam",
+  "email": "naiyar@example.com",
+  "feedback": "The dashboard and AI interview flow are helpful."
 }
 ```
 
-`rating`, `liked`, `improvements`, and `foundBug` are required. Text is
-trimmed, control characters are removed, and length limits are enforced. The
-user ID, name, and email are always read from the verified JWT user and cannot
-be supplied or overridden by the client. Feedback has no public listing or
-detail endpoint.
+All three fields are required. Text is trimmed, control characters are
+removed, email format is validated, and length limits are enforced. The
+submission is always associated with the verified JWT user ID; the editable
+name and email are stored as the user submitted them. Feedback has no public
+listing or detail endpoint.
+
+To review submissions in MongoDB Atlas, open the deployed cluster, choose
+**Browse Collections**, select the application database, and open the
+`feedbacks` collection. MongoDB is the source of truth; no email provider is
+configured in this project.
 
 ## Dashboard
 

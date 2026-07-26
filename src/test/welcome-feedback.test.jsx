@@ -4,9 +4,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import LoginForm from "../components/Auth/LoginForm";
 import SignupForm from "../components/Auth/SignupForm";
-import WelcomeFeedbackModal, {
-  WELCOME_DISMISSED_KEY,
-} from "../components/Feedback/WelcomeFeedbackModal";
+import WelcomeFeedbackModal from "../components/Feedback/WelcomeFeedbackModal";
 import AuthProvider from "../context/AuthProvider";
 
 const apiMocks = vi.hoisted(() => ({
@@ -44,28 +42,33 @@ const login = async (user) => {
   await user.click(screen.getByRole("button", { name: "Login" }));
 };
 
-describe("welcome and feedback modal", () => {
+describe("welcome and feedback flow", () => {
   beforeEach(() => {
     apiMocks.apiRequest.mockReset();
     apiMocks.submitFeedback.mockReset();
     apiMocks.apiRequest.mockResolvedValue(authenticatedResponse);
   });
 
-  test("opens in the dashboard after successful login and closes with Escape", async () => {
+  test("opens after every successful login without using dismissal storage", async () => {
+    localStorage.setItem("ai-interview-copilot-welcome-v1-dismissed", "true");
+    localStorage.setItem("ai-interview-copilot-welcome-v2-dismissed", "true");
     const user = userEvent.setup();
-    render(<AuthFlow />);
+    const first = render(<AuthFlow />);
 
     await login(user);
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
-    expect(screen.getByText("Dashboard loaded")).toBeInTheDocument();
-    expect(screen.getByText(/Welcome to AI Interview Copilot/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Explore the App" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Give feedback about/ })).toBeVisible();
 
-    fireEvent.keyDown(document, { key: "Escape" });
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
-    expect(localStorage.getItem(WELCOME_DISMISSED_KEY)).toBe("true");
+    first.unmount();
+    localStorage.removeItem("authToken");
+    render(<AuthFlow />);
+    await login(user);
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
   });
 
-  test("opens after signup and the close button persists dismissal", async () => {
+  test("opens after successful signup", async () => {
     const user = userEvent.setup();
     render(<AuthFlow initialPath="/signup" />);
 
@@ -76,68 +79,70 @@ describe("welcome and feedback modal", () => {
     await user.click(screen.getByRole("button", { name: "Sign up" }));
 
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Close welcome message" }));
-    expect(localStorage.getItem(WELCOME_DISMISSED_KEY)).toBe("true");
+    expect(screen.getByText("Dashboard loaded")).toBeInTheDocument();
   });
 
-  test("does not open for unauthenticated visitors or after dismissal", async () => {
-    localStorage.setItem(WELCOME_DISMISSED_KEY, "true");
-    const user = userEvent.setup();
-    const { unmount } = render(<AuthFlow initialPath="/dashboard" />);
+  test("does not open for unauthenticated visitors", () => {
+    render(<AuthFlow initialPath="/dashboard" />);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    unmount();
+    expect(screen.queryByRole("button", { name: /Give feedback about/ })).not.toBeInTheDocument();
+  });
 
+  test("close and Escape keep permanent feedback available", async () => {
+    const user = userEvent.setup();
+    const first = render(<AuthFlow />);
+    await login(user);
+    await user.click(await screen.findByRole("button", { name: "Close welcome message" }));
+    expect(screen.getByRole("button", { name: /Give feedback about/ })).toBeVisible();
+
+    first.unmount();
+    localStorage.removeItem("authToken");
     render(<AuthFlow />);
     await login(user);
-    expect(await screen.findByText("Dashboard loaded")).toBeInTheDocument();
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape" });
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(screen.getByRole("button", { name: /Give feedback about/ })).toBeVisible();
   });
 
-  test("shows the updated popup when only the previous version was dismissed", async () => {
-    localStorage.setItem("ai-interview-copilot-welcome-v1-dismissed", "true");
+  test("opens the simplified form with prefilled details and validates it", async () => {
     const user = userEvent.setup();
-    render(<AuthFlow />);
-
-    await login(user);
-    expect(await screen.findByRole("dialog")).toBeInTheDocument();
-  });
-
-  test("validates and successfully submits feedback", async () => {
-    const user = userEvent.setup();
-    apiMocks.submitFeedback.mockResolvedValue({ success: true });
     render(<AuthFlow />);
     await login(user);
     await user.click(await screen.findByRole("button", { name: "Give Feedback" }));
 
+    expect(screen.getByLabelText(/Name/)).toHaveValue("Naiyar");
+    expect(screen.getByLabelText(/Email/)).toHaveValue("naiyar@example.com");
     await user.click(screen.getByRole("button", { name: "Submit feedback" }));
-    expect(screen.getByText("Choose a rating from 1 to 5.")).toBeInTheDocument();
-    expect(screen.getByText("Tell us what you liked.")).toBeInTheDocument();
+    expect(screen.getByText("Enter your feedback.")).toBeInTheDocument();
+  });
 
-    await user.click(screen.getByRole("radio", { name: "5 out of 5" }));
-    await user.type(screen.getByLabelText(/What did you like/), "The interview flow");
-    await user.type(screen.getByLabelText(/What should be improved/), "More mobile spacing");
+  test("successfully submits from the permanent feedback trigger", async () => {
+    const user = userEvent.setup();
+    apiMocks.submitFeedback.mockResolvedValue({ success: true });
+    render(<AuthFlow />);
+    await login(user);
+    await user.click(await screen.findByRole("button", { name: "Explore the App" }));
+    await user.click(screen.getByRole("button", { name: /Give feedback about/ }));
+    await user.type(screen.getByLabelText(/Feedback/), "The interview flow is helpful.");
     await user.click(screen.getByRole("button", { name: "Submit feedback" }));
 
-    await waitFor(() => expect(apiMocks.submitFeedback).toHaveBeenCalledWith(
-      expect.objectContaining({
-        rating: 5,
-        liked: "The interview flow",
-        improvements: "More mobile spacing",
-        foundBug: false,
+    await waitFor(() =>
+      expect(apiMocks.submitFeedback).toHaveBeenCalledWith({
+        name: "Naiyar",
+        email: "naiyar@example.com",
+        feedback: "The interview flow is helpful.",
       }),
-    ));
+    );
     expect(await screen.findByText("Thank you!")).toBeInTheDocument();
   });
 
-  test("shows a friendly submission error and allows cancellation", async () => {
+  test("shows submission errors and allows cancellation", async () => {
     const user = userEvent.setup();
     apiMocks.submitFeedback.mockRejectedValue(new Error("Network failure"));
     render(<AuthFlow />);
     await login(user);
     await user.click(await screen.findByRole("button", { name: "Give Feedback" }));
-    await user.click(screen.getByRole("radio", { name: "4 out of 5" }));
-    await user.type(screen.getByLabelText(/What did you like/), "Reports");
-    await user.type(screen.getByLabelText(/What should be improved/), "Loading speed");
+    await user.type(screen.getByLabelText(/Feedback/), "Please improve loading speed.");
     await user.click(screen.getByRole("button", { name: "Submit feedback" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(

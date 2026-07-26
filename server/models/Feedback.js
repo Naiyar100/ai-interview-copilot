@@ -8,53 +8,24 @@ const feedbackSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    userName: {
+    name: {
       type: String,
       required: true,
       trim: true,
       maxlength: 100,
     },
-    userEmail: {
+    email: {
       type: String,
       required: true,
       lowercase: true,
       trim: true,
       maxlength: 254,
     },
-    rating: {
-      type: Number,
-      required: true,
-      min: 1,
-      max: 5,
-    },
-    liked: {
+    feedback: {
       type: String,
       required: true,
       trim: true,
-      maxlength: 1000,
-    },
-    improvements: {
-      type: String,
-      required: true,
-      trim: true,
-      maxlength: 1000,
-    },
-    foundBug: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-    bugDescription: {
-      type: String,
-      trim: true,
-      maxlength: 1000,
-      default: "",
-    },
-    pageOrFeature: {
-      type: String,
-      trim: true,
-      maxlength: 120,
-      default: "",
+      maxlength: 2000,
     },
   },
   { timestamps: true },

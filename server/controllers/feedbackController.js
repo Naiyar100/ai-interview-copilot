@@ -19,7 +19,6 @@ export const submitFeedback = async (req, res) => {
   return sendSuccess(res, 201, "Thank you for your feedback", {
     feedback: {
       id: feedback._id,
-      rating: feedback.rating,
       createdAt: feedback.createdAt,
     },
   });
