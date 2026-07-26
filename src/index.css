@@ -54,6 +54,17 @@ body {
 
 button, input, select, textarea { font: inherit; }
 :focus-visible { outline: 3px solid #7c63ee; outline-offset: 3px; }
+.sr-only {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }

@@ -8,6 +8,7 @@ function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(() => Boolean(token));
+  const [welcomeRequestId, setWelcomeRequestId] = useState(null);
 
   const saveSession = useCallback((nextToken, nextUser) => {
     localStorage.setItem(TOKEN_KEY, nextToken);
@@ -23,6 +24,7 @@ function AuthProvider({ children }) {
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
+    setWelcomeRequestId(null);
   }, []);
 
   useEffect(() => {
@@ -71,6 +73,7 @@ function AuthProvider({ children }) {
         body: credentials,
       });
       saveSession(response.data.token, response.data.user);
+      setWelcomeRequestId(`signup-${Date.now()}`);
       return response.data.user;
     },
     [saveSession],
@@ -83,6 +86,7 @@ function AuthProvider({ children }) {
         body: credentials,
       });
       saveSession(response.data.token, response.data.user);
+      setWelcomeRequestId(`login-${Date.now()}`);
       return response.data.user;
     },
     [saveSession],
@@ -90,6 +94,10 @@ function AuthProvider({ children }) {
 
   const updateUser = useCallback((updatedUser) => {
     setUser((currentUser) => ({ ...currentUser, ...updatedUser }));
+  }, []);
+
+  const dismissWelcome = useCallback(() => {
+    setWelcomeRequestId(null);
   }, []);
 
   const value = useMemo(
@@ -101,9 +109,11 @@ function AuthProvider({ children }) {
       login,
       register,
       updateUser,
+      welcomeRequestId,
+      dismissWelcome,
       logout: clearSession,
     }),
-    [clearSession, isLoading, login, register, token, updateUser, user],
+    [clearSession, dismissWelcome, isLoading, login, register, token, updateUser, user, welcomeRequestId],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

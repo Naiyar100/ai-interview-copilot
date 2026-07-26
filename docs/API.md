@@ -27,6 +27,29 @@ All responses use `{ "success": boolean, "message": string, "data": object }` on
 - `GET /users/me` — safe profile fields
 - `PUT /users/me` — `{ name, email }`
 
+## Feedback
+
+- `POST /feedback` — submits authenticated product feedback.
+
+Request body:
+
+```json
+{
+  "rating": 5,
+  "liked": "The dashboard and AI interview flow",
+  "improvements": "The mobile spacing could be improved",
+  "foundBug": true,
+  "bugDescription": "A button briefly froze",
+  "pageOrFeature": "Interview Results"
+}
+```
+
+`rating`, `liked`, `improvements`, and `foundBug` are required. Text is
+trimmed, control characters are removed, and length limits are enforced. The
+user ID, name, and email are always read from the verified JWT user and cannot
+be supplied or overridden by the client. Feedback has no public listing or
+detail endpoint.
+
 ## Dashboard
 
 - `GET /dashboard/summary` — owned interview totals, completion/evaluation metrics, role/difficulty statistics, duration, and recent reports.

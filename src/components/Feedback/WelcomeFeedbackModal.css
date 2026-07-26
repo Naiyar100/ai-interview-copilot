@@ -1,0 +1,154 @@
+.welcome-feedback-modal h2 {
+  max-width: calc(100% - 44px);
+  margin: 6px 0 16px;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(26px, 4vw, 34px);
+  line-height: 1.15;
+}
+
+.welcome-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 15px;
+  color: #fff;
+  background: linear-gradient(135deg, #7652e8, #5487ed);
+  box-shadow: 0 12px 28px rgba(94, 100, 235, .28);
+  font-weight: 800;
+}
+
+.welcome-kicker {
+  color: #7058e8;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+html[data-theme="dark"] .welcome-kicker { color: #a895ff; }
+
+.welcome-copy,
+.feedback-intro {
+  color: var(--modal-muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.welcome-copy { display: grid; gap: 12px; }
+.welcome-actions,
+.feedback-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.feedback-primary,
+.feedback-secondary {
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.feedback-primary {
+  border: 0;
+  color: #fff;
+  background: linear-gradient(135deg, #704fe5, #5487ed);
+  box-shadow: 0 10px 24px rgba(84, 102, 235, .24);
+}
+
+.feedback-secondary {
+  border: 1px solid var(--modal-border);
+  color: var(--modal-text);
+  background: var(--modal-panel);
+}
+
+.feedback-primary:disabled,
+.feedback-secondary:disabled { cursor: wait; opacity: .65; }
+
+.feedback-form { display: grid; gap: 18px; margin-top: 22px; }
+.feedback-rating,
+.feedback-bug { border: 0; }
+.feedback-rating legend,
+.feedback-bug legend,
+.feedback-field > span { margin-bottom: 8px; color: var(--modal-text); font-weight: 700; }
+.feedback-rating legend span,
+.feedback-field b { color: #e45168; }
+.rating-options { display: flex; gap: 8px; }
+.rating-options label { cursor: pointer; }
+.rating-options input { position: absolute; opacity: 0; pointer-events: none; }
+.rating-options span[aria-hidden] {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--modal-border);
+  border-radius: 11px;
+  color: #9aa2b6;
+  background: var(--modal-panel);
+  font-size: 21px;
+}
+.rating-options input:checked + span,
+.rating-options label:has(~ label input:checked) span {
+  border-color: #7359e9;
+  color: #f4b942;
+  background: rgba(115, 89, 233, .11);
+}
+.rating-options input:focus-visible + span { outline: 3px solid #7c63ee; outline-offset: 3px; }
+
+.feedback-field { position: relative; display: grid; }
+.feedback-field textarea,
+.feedback-field input {
+  width: 100%;
+  border: 1px solid var(--modal-border);
+  border-radius: 12px;
+  color: var(--modal-text);
+  background: var(--modal-panel);
+}
+.feedback-field textarea { min-height: 92px; padding: 12px 14px 26px; resize: vertical; }
+.feedback-field input { min-height: 46px; padding: 0 14px; }
+.feedback-field small {
+  position: absolute;
+  right: 10px;
+  bottom: 7px;
+  color: var(--modal-muted);
+  font-size: 11px;
+}
+.feedback-field:has(.feedback-field-error) small { bottom: 28px; }
+.feedback-field-error,
+.feedback-request-error { color: #d94158; font-size: 13px; }
+.feedback-field-error { margin-top: 5px; }
+.feedback-request-error { padding: 10px 12px; border-radius: 10px; background: rgba(217, 65, 88, .1); }
+
+.feedback-bug { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.feedback-bug legend { width: 100%; }
+.feedback-bug label { display: flex; align-items: center; gap: 7px; color: var(--modal-muted); }
+.feedback-bug input { accent-color: #7359e9; }
+.feedback-actions { justify-content: flex-end; margin-top: 4px; }
+
+.feedback-success { display: grid; justify-items: center; padding: 32px 0 12px; text-align: center; }
+.feedback-success > span {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, #36a673, #59c892);
+  font-size: 30px;
+  font-weight: 800;
+}
+.feedback-success h2 { margin-top: 20px; }
+.feedback-success p { max-width: 440px; color: var(--modal-muted); line-height: 1.6; }
+.feedback-success button { margin-top: 24px; }
+
+@media (max-width: 520px) {
+  .welcome-actions,
+  .feedback-actions { flex-direction: column; }
+  .welcome-actions .feedback-primary { order: -1; }
+  .rating-options { justify-content: space-between; }
+  .rating-options span[aria-hidden] { width: 39px; height: 39px; }
+}

@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import WelcomeFeedbackModal from "./components/Feedback/WelcomeFeedbackModal";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -22,8 +23,9 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   return (
-    <Suspense fallback={<div className="app-loading" role="status" aria-live="polite"><span aria-hidden="true" />Loading page...</div>}>
-      <Routes>
+    <>
+      <Suspense fallback={<div className="app-loading" role="status" aria-live="polite"><span aria-hidden="true" />Loading page...</div>}>
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -132,8 +134,10 @@ function App() {
           }
         />
         <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Suspense>
+        </Routes>
+      </Suspense>
+      <WelcomeFeedbackModal />
+    </>
   );
 }
 

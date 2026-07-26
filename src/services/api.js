@@ -59,6 +59,13 @@ export const updateUserProfile = (profile) =>
     requiresAuth: true,
   });
 
+export const submitFeedback = (feedback) =>
+  apiRequest("/feedback", {
+    method: "POST",
+    body: feedback,
+    requiresAuth: true,
+  });
+
 export const getDashboardSummary = () =>
   apiRequest("/dashboard/summary", { requiresAuth: true });
 

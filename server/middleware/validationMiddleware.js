@@ -86,6 +86,43 @@ export const activityListValidation = [
   validateRequest,
 ];
 
+const cleanFeedbackText = (value) =>
+  typeof value === "string"
+    ? [...value.trim()]
+        .filter((character) => {
+          const code = character.charCodeAt(0);
+          return code === 9 || code === 10 || code === 13 || (code >= 32 && code !== 127);
+        })
+        .join("")
+    : value;
+
+export const feedbackValidation = [
+  body("rating")
+    .isInt({ min: 1, max: 5 })
+    .withMessage("must be a whole number from 1 to 5")
+    .toInt(),
+  body("liked")
+    .isString()
+    .customSanitizer(cleanFeedbackText)
+    .isLength({ min: 1, max: 1000 }),
+  body("improvements")
+    .isString()
+    .customSanitizer(cleanFeedbackText)
+    .isLength({ min: 1, max: 1000 }),
+  body("foundBug").isBoolean({ strict: true }).toBoolean(),
+  body("bugDescription")
+    .optional()
+    .isString()
+    .customSanitizer(cleanFeedbackText)
+    .isLength({ max: 1000 }),
+  body("pageOrFeature")
+    .optional()
+    .isString()
+    .customSanitizer(cleanFeedbackText)
+    .isLength({ max: 120 }),
+  validateRequest,
+];
+
 const scheduleFields = [
   body("title").isString().trim().isLength({ min: 1, max: 120 }),
   body("role").isString().trim().isLength({ min: 1, max: 120 }),
